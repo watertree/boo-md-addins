@@ -3,6 +3,10 @@ namespace Boo.Ide
 import Boo.Lang.Compiler
 import Boo.Lang.Compiler.Ast
 
+import Boo.Adt
+
+let SendErrorsToTheConsole = true
+
 class ProjectIndex:
 	
 	_compiler as BooCompiler
@@ -73,7 +77,7 @@ class ProjectIndex:
 		try:
 			_parser.Parameters.Input.Add(IO.StringInput(fileName, contents))
 			result = _parser.Run(unit)
-			//DumpErrors result.Errors
+			DumpErrors result.Errors
 			return result.CompileUnit.Modules[-1]
 		except x:
 			print x
@@ -82,5 +86,6 @@ class ProjectIndex:
 			_parser.Parameters.Input.Clear()
 				
 def DumpErrors(errors as CompilerErrorCollection):
-	for error in errors:
-		print error.ToString(true)
+	if SendErrorsToTheConsole:
+		for error in errors:
+			System.Console.Error.WriteLine(error.ToString(true))
