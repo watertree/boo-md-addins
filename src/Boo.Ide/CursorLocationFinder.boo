@@ -14,11 +14,10 @@ class CursorLocationFinder(DepthFirstVisitor):
 		return _node
 			
 	override def LeaveMemberReferenceExpression(node as MemberReferenceExpression):
-		if node.Name != CursorLocation:
-			return
-		Found(node)
+		if node.Name == CursorLocation:
+			Found(node)
 			
 	protected def Found(node):
 		_node = node
 		Cancel()
-		
+
