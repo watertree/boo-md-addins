@@ -90,7 +90,11 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		"unless",
 		"virtual",
 		"while",
-		"yield"
+		"yield",
+		
+		// BUILTINS
+		"len",
+		"print"
 	]
         
   # Scraped from Types.cs
