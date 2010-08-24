@@ -3,7 +3,7 @@ namespace Boo.MonoDevelop.Util.Completion
 import System
 import MonoDevelop.Ide.CodeCompletion
 
-class BooCompletionDataList(CompletionDataList,IMutableCompletionDataList):
+class BooCompletionDataList(CompletionDataList, IMutableCompletionDataList):
 	event Changed as EventHandler
 	event Changing as EventHandler
 	
@@ -12,11 +12,11 @@ class BooCompletionDataList(CompletionDataList,IMutableCompletionDataList):
 	public IsChanging as bool:
 		get: return _isChanging
 		set: 
-			oldIsChanging = _isChanging
+			wasChanging = _isChanging
 			_isChanging = value
-			if (value and not oldIsChanging):
+			if _isChanging and not wasChanging:
 				OnChanging(self, null)
-			elif (oldIsChanging and not value):
+			elif wasChanging and not _isChanging:
 				OnChanged(self, null)
 			
 	def constructor():
@@ -25,18 +25,10 @@ class BooCompletionDataList(CompletionDataList,IMutableCompletionDataList):
 		
 	def Dispose():
 		pass
-		
-	new def Add(item as CompletionData):
-		(self as CompletionDataList).Add(item)
-		
-	new def AddRange(items as CompletionData*):
-		(self as CompletionDataList).AddRange(items)
-		
+
 	protected virtual def OnChanging(sender, args as EventArgs):
-		if(null != Changing):
-			Changing(sender, args)
+		Changing(sender, args)
 
 	protected virtual def OnChanged(sender, args as EventArgs):
-		if(null != Changed):
-			Changed(sender, args)
+		Changed(sender, args)
 		
