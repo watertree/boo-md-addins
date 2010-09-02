@@ -12,7 +12,10 @@ def CreateSingleFileProject(projectName as string, code as string):
 	tempFile = PathCombine(TmpDir, "Boo.MonoDevelop", projectName, projectName + ".boo")
 	Directory.CreateDirectory(Path.GetDirectoryName(tempFile))
 	File.WriteAllText(tempFile, code)
-	return Services.ProjectService.CreateSingleFileProject(tempFile)
+	project = DotNetAssemblyProject("Boo")
+	project.FileName = PathCombine(TmpDir, projectName + ".booproj")
+	project.AddFile(tempFile)
+	return project
 	
 def PathCombine(*parts as (string)):
 	path = parts[0]
@@ -20,10 +23,10 @@ def PathCombine(*parts as (string)):
 		path = Path.Combine(path, part)
 	return path
 	
-def GetProjectDom(project as Project):
+def GetProjectDom([required] project as Project):
 	ProjectDomService.Load(project)
 	dom = ProjectDomService.GetProjectDom(project)
-	dom.ForceUpdate()
+	dom.ForceUpdate(true)
 	return dom
 	
 def CreateTempDirectory():
