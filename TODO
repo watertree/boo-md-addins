@@ -1,0 +1,5 @@
+* implement ITextEditorResolverProvider
+
+	<Extension path = "/MonoDevelop/Ide/TextEditorResolver">
+		<Resolver class = "Boo.MonoDevelop..Resolver.TextEditorResolverProvider" mimeType="text/x-boo" />
+	</Extension>
