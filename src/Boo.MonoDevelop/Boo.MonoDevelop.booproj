@@ -47,8 +47,7 @@
       <Package>monodevelop-core-addins</Package>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=40c86c8e7b5dc1eb">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=de4c268e3b4dec01">
       <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
