@@ -1,7 +1,6 @@
 namespace Boo.MonoDevelop.Tests
 
 import System
-import System.IO
 import NUnit.Framework
 import MonoDevelop
 import MonoDevelop.Projects.Dom.Parser
