@@ -211,8 +211,8 @@
 			</fileset>
 		</copy>
 		
-		<mkdir dir="${dir.md.addins}/bin" />
-		<copy todir="${dir.md.addins}/bin">
+		<mkdir dir="${build.dir}/unityscript" />
+		<copy todir="${build.dir}/unityscript">
 			<fileset basedir="${unityscript.build.dir}">
 				<include name="us.exe*" />
 				<include name="UnityScript.dll*" />
@@ -226,6 +226,7 @@
 				<include name="Boo.MonoDevelop.Util.dll*" />
 				<include name="Boo.Ide.dll*" />
 				<include name="UnityScript.Ide.dll*" />
+				<include name="unityscript/**/*" />
 			</fileset>
 		</copy>
 		
