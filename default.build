@@ -153,20 +153,21 @@
 			</embed>
 		</booc>
 		
+		<copy todir="${build.dir}/boo">
+			<fileset basedir="${boo.build.dir}">
+				<include name="Boo.Lang*.dll" />
+				<include name="Boo.Lang*.mdb" />
+				<include name="booc.*" />
+			</fileset>
+		</copy>
+		
 		<copy todir="${md.addins.dir}" overwrite="true">
 			<fileset basedir="${build.dir}">
 				<include name="Boo.MonoDevelop.dll*" />
 				<include name="Boo.MonoDevelop.Util.dll*" />
 				<include name="Boo.Ide.dll*" />
 				<include name="UnityScript.Ide.dll*" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${md.addins.dir}/boo">
-			<fileset basedir="${boo.build.dir}">
-				<include name="Boo.Lang*.dll" />
-				<include name="Boo.Lang*.mdb" />
-				<include name="booc.*" />
+				<include name="boo/**/*" />
 			</fileset>
 		</copy>
 	</target>
