@@ -9,7 +9,7 @@ class BooParserTest(MonoDevelopTestBase):
 
 	[Test]
 	def SingleTypeModule():
-	
+		
 		code = """namespace BooParserTest
 class Foo:
 	def Bar():

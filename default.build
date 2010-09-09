@@ -13,7 +13,6 @@
 	<property name="md.bin.dir" value="/usr/lib/monodevelop/bin" />
 	<property name="md.addins.dir" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/Boo" />
 	<property name="dir.md.addins" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/UnityScript" />
-		
 
 	<include buildfile="nunit.inc" />	
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
@@ -33,6 +32,42 @@
 				</assemblies>
 			</test>
 		</nunit2>
+	</target>
+	
+	<target name="test-md" depends="build, Boo.MonoDevelop.Tests">
+	
+		<property name="tmp.test.dir" value="/tmp/boo-md-addins/config" />
+		<delete dir="${tmp.test.dir}" />
+		<mkdir dir="${tmp.test.dir}" />
+		
+		<copy todir="${tmp.test.dir}/addins">
+			<fileset basedir="${md.bin.dir}/../AddIns">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}">
+			<fileset basedir="${md.bin.dir}">
+				<include name="MonoDevelop.Core.dll" />
+				<include name="MonoDevelop.Ide.dll" />
+				<include name="mdhost.exe" />
+			</fileset>
+		</copy>
+	
+		<exec program="nunit-console2" workingdir="${build.dir}">
+		
+			<environment>
+				<variable name="MONO_PATH" dir="${md.bin.dir}" />
+				<variable name="MONO_ADDINS_REGISTRY" dir="${tmp.test.dir}" />
+				<variable name="XDG_CONFIG_HOME" dir="${tmp.test.dir}" />
+			</environment>
+		
+			<arg value="-nologo" />
+			<arg value="-noshadow" />
+			<arg value="-nothread" />
+			<arg file="${build.dir}/Boo.MonoDevelop.Tests.dll" />
+		</exec>
+		
 	</target>
 	
 	<target name="Boo.Ide" description="IDE agnostic tools" depends="init">
@@ -116,6 +151,24 @@
 				<include name="${build.dir}/UnityScript.Ide.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
+			</references>
+		</booc>
+	</target>
+	
+	<target name="Boo.MonoDevelop.Tests" depends="Boo.MonoDevelop">
+		<booc failonerror="true" target="library" output="${build.dir}/Boo.MonoDevelop.Tests.dll">
+			<sources basedir="src/Boo.MonoDevelop.Tests">
+				<include name="*.boo" />
+			</sources>
+			<references>
+				<include name="${build.dir}/Boo.MonoDevelop.dll" />
+				<include name="${nunit.framework.dll}" />
+				<include name="System.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Ide.dll" />
+				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
+				<include name="${boo.extensions.build.dir}/Boo.Adt.dll" />
+				<include name="${boo.build.dir}/Boo.Lang.PatternMatching.dll" />
 			</references>
 		</booc>
 	</target>

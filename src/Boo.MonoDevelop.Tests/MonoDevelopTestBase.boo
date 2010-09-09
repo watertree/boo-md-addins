@@ -14,25 +14,11 @@ class MonoDevelopTestBase:
 	
 	[TestFixtureSetUp]
 	virtual def SetUp():
-		if firstRun:
-			rootDir = PathCombine(TmpDir, "config")
-			try:
-				firstRun = false
-				InternalSetup(rootDir)
-			except:
-				// if we encounter an error, try to re create the configuration directory
-				// (This takes much time, therfore it's only done when initialization fails)
-				try:
-					if Directory.Exists(rootDir):
-						Directory.Delete(rootDir, true)
-					InternalSetup(rootDir)
-				except x:
-					print "failed to initialize MD:", x
-					
-	static def InternalSetup(rootDir as string):
-		print rootDir
-		Environment.SetEnvironmentVariable("MONO_ADDINS_REGISTRY", rootDir)
-		Environment.SetEnvironmentVariable("XDG_CONFIG_HOME", rootDir)
+		if not firstRun:
+			return
+			
+		firstRun = false
+		
 		Core.Runtime.Initialize(true)
 		Gtk.Application.Init()
 		ProjectDomService.TrackFileChanges = true
