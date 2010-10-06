@@ -204,6 +204,7 @@
 		<Word>get</Word>
 		<Word>set</Word>
 		<Word>value</Word>
+		<Word>property</Word>
 	</Keywords>
 	
 	<Keywords color = "keyword.declaration">
