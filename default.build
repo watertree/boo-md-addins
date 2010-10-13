@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="boo-extensions" default="build">
+<project name="boo-md-addins" default="build">
 
 	<property name="build.dir" value="build" />
 	
@@ -12,6 +12,7 @@
 	
 	<property name="md.bin.dir" value="/usr/lib/monodevelop/bin" />
 	<property name="md.addins.dir" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/Boo" />
+	<property name="dir.md.addins" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/UnityScript" />
 
 	<include buildfile="nunit.inc" />	
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
@@ -31,6 +32,42 @@
 				</assemblies>
 			</test>
 		</nunit2>
+	</target>
+	
+	<target name="test-md" depends="build, Boo.MonoDevelop.Tests">
+	
+		<property name="tmp.test.dir" value="/tmp/boo-md-addins/config" />
+		<delete dir="${tmp.test.dir}" />
+		<mkdir dir="${tmp.test.dir}" />
+		
+		<copy todir="${tmp.test.dir}/addins">
+			<fileset basedir="${md.bin.dir}/../AddIns">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}">
+			<fileset basedir="${md.bin.dir}">
+				<include name="MonoDevelop.Core.dll" />
+				<include name="MonoDevelop.Ide.dll" />
+				<include name="mdhost.exe" />
+			</fileset>
+		</copy>
+	
+		<exec program="nunit-console2" workingdir="${build.dir}">
+		
+			<environment>
+				<variable name="MONO_PATH" dir="${md.bin.dir}" />
+				<variable name="MONO_ADDINS_REGISTRY" dir="${tmp.test.dir}" />
+				<variable name="XDG_CONFIG_HOME" dir="${tmp.test.dir}" />
+			</environment>
+		
+			<arg value="-nologo" />
+			<arg value="-noshadow" />
+			<arg value="-nothread" />
+			<arg file="${build.dir}/Boo.MonoDevelop.Tests.dll" />
+		</exec>
+		
 	</target>
 	
 	<target name="Boo.Ide" description="IDE agnostic tools" depends="init">
@@ -102,7 +139,7 @@
 	</target>
 
 
-	<target name="Boo.MonoDevelop.Util" description="Utility code to share with unityscript" depends="Boo.Ide">
+	<target name="Boo.MonoDevelop.Util" description="Utility code to share with unityscript" depends="Boo.Ide, UnityScript.Ide">
 		<booc failonerror="true" target="library" output="${build.dir}/Boo.MonoDevelop.Util.dll">
 			<sources basedir="src/Boo.MonoDevelop.Util">
 				<include name="*.boo" />
@@ -111,8 +148,27 @@
 				<include name="System.Core.dll" />
 				<include name="${boo.build.dir}/Boo.Lang.Parser.dll" />
 				<include name="${build.dir}/Boo.Ide.dll" />
+				<include name="${build.dir}/UnityScript.Ide.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
+			</references>
+		</booc>
+	</target>
+	
+	<target name="Boo.MonoDevelop.Tests" depends="Boo.MonoDevelop">
+		<booc failonerror="true" target="library" output="${build.dir}/Boo.MonoDevelop.Tests.dll">
+			<sources basedir="src/Boo.MonoDevelop.Tests">
+				<include name="*.boo" />
+			</sources>
+			<references>
+				<include name="${build.dir}/Boo.MonoDevelop.dll" />
+				<include name="${nunit.framework.dll}" />
+				<include name="System.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Ide.dll" />
+				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
+				<include name="${boo.extensions.build.dir}/Boo.Adt.dll" />
+				<include name="${boo.build.dir}/Boo.Lang.PatternMatching.dll" />
 			</references>
 		</booc>
 	</target>
@@ -129,6 +185,7 @@
 				<include name="**/*.boo" />
 			</sources>
 			<references>
+				<include name="System.Core.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
 				<include name="${md.bin.dir}/NRefactory.dll" />
@@ -149,19 +206,21 @@
 			</embed>
 		</booc>
 		
-		<copy todir="${md.addins.dir}">
-			<fileset basedir="${build.dir}">
-				<include name="Boo.MonoDevelop.dll*" />
-				<include name="Boo.MonoDevelop.Util.dll*" />
-				<include name="Boo.Ide.dll*" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${md.addins.dir}/boo">
+		<copy todir="${build.dir}/boo">
 			<fileset basedir="${boo.build.dir}">
 				<include name="Boo.Lang*.dll" />
 				<include name="Boo.Lang*.mdb" />
 				<include name="booc.*" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${md.addins.dir}" overwrite="true">
+			<fileset basedir="${build.dir}">
+				<include name="Boo.MonoDevelop.dll*" />
+				<include name="Boo.MonoDevelop.Util.dll*" />
+				<include name="Boo.Ide.dll*" />
+				<include name="UnityScript.Ide.dll*" />
+				<include name="boo/**/*" />
 			</fileset>
 		</copy>
 	</target>
@@ -176,6 +235,7 @@
 				<include name="**/*.boo" />
 			</sources>
 			<references>
+				<include name="System.Core.dll" />
 				<include name="${unityscript.build.dir}/UnityScript.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
@@ -191,22 +251,22 @@
 			<embed basedir="src/UnityScript.MonoDevelop">
 				<include name="UnityScript.MonoDevelop.addin.xml" />
 				<include name="UnityScriptSyntaxMode.xml" />
+				<include name="ShaderLabSyntaxMode.xml" />
 				<include name="Templates/*.xft.xml" />
 				<include name="Templates/*.xpt.xml" />
 				<include name="Icons/*.png" />
 			</embed>
 		</booc>
 		
-		<property name="dir.md.addins" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/UnityScript" />
-		
-		<copy todir="${dir.md.addins}">
+		<copy todir="${dir.md.addins}" overwrite="true">
 			<fileset basedir="${build.dir}">
 				<include name="UnityScript.MonoDevelop.*" />
+				<include name="Boo.MonoDevelop.Util.dll*" />
 			</fileset>
 		</copy>
 		
-		<mkdir dir="${dir.md.addins}/bin" />
-		<copy todir="${dir.md.addins}/bin">
+		<mkdir dir="${build.dir}/unityscript" />
+		<copy todir="${build.dir}/unityscript">
 			<fileset basedir="${unityscript.build.dir}">
 				<include name="us.exe*" />
 				<include name="UnityScript.dll*" />
@@ -220,6 +280,7 @@
 				<include name="Boo.MonoDevelop.Util.dll*" />
 				<include name="Boo.Ide.dll*" />
 				<include name="UnityScript.Ide.dll*" />
+				<include name="unityscript/**/*" />
 			</fileset>
 		</copy>
 		

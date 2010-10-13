@@ -103,8 +103,4 @@
 		<Class class = "Boo.MonoDevelop.ProjectModel.BooParser" />
 	</Extension>
 	
-	<Extension path = "/MonoDevelop/Refactoring/ASTProvider">
-		<Class class = "Boo.MonoDevelop.Refactoring.BooASTProvider" />
-	</Extension>
-	
 </Addin>

@@ -44,7 +44,7 @@ class BooCompiler:
 	private def CopyRequiredReferences():
 		outputDir = Path.GetDirectoryName(_config.CompiledOutputName)
 		for reference in ProjectReferences():
-			continue unless IsBooPackageReference(reference)
+			#continue unless IsBooPackageReference(reference)
 			for file in reference.GetReferencedFileNames(_selector):
 				CopyReferencedFileTo(file, outputDir)
 				
@@ -109,7 +109,7 @@ class BooCompiler:
 						RedirectStandardError: true)
 		
 		using process = Runtime.SystemAssemblyService.CurrentRuntime.ExecuteAssembly(startInfo, _config.TargetFramework):
-			return process.StandardOutput.ReadToEnd() + System.Environment.NewLine + process.StandardError.ReadToEnd()
+			return process.StandardError.ReadToEnd()
 			
 	private def ParseBuildResult(stdout as string):
 		

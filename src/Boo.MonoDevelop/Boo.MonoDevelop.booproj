@@ -43,12 +43,12 @@
     <Reference Include="MonoDevelop.Core, Version=2.4.0.0, Culture=neutral">
       <Package>monodevelop</Package>
     </Reference>
-    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=cea54449d721aaec">
-      <Package>monodevelop</Package>
-    </Reference>
-    <Reference Include="Mono.Debugger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="MonoDevelop.Debugger, Version=2.4.0.0, Culture=neutral">
       <Package>monodevelop-core-addins</Package>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=de4c268e3b4dec01">
+      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +68,7 @@
     <Compile Include="ProjectModel\Consts.boo" />
     <Compile Include="IO.boo" />
     <Compile Include="Editor\BooIndentation.boo" />
+    <Compile Include="Completion\BooParameterDataProvider.boo" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Boo.MonoDevelop.addin.xml">
@@ -112,6 +113,10 @@
     <ProjectReference Include="..\..\..\boo-extensions\src\Boo.Adt\Boo.Adt.booproj">
       <Project>{18AF07E6-C62E-4CDC-8F58-5A0F9A872F7F}</Project>
       <Name>Boo.Adt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Boo.Ide\Boo.Ide.booproj">
+      <Project>{C79506C7-C4C4-424F-95AA-132B7DDF5AF9}</Project>
+      <Name>Boo.Ide</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

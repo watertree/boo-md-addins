@@ -144,6 +144,7 @@
 	</Keywords>
 	
 	<Keywords color = "keyword.modifier">
+		<Word>new</Word>
 		<Word>override</Word>
 		<Word>static</Word>
 
@@ -203,6 +204,7 @@
 		<Word>get</Word>
 		<Word>set</Word>
 		<Word>value</Word>
+		<Word>property</Word>
 	</Keywords>
 	
 	<Keywords color = "keyword.declaration">

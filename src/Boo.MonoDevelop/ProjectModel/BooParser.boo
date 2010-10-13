@@ -6,19 +6,17 @@ import System.IO
 import MonoDevelop.Projects.Dom
 import MonoDevelop.Projects.Dom.Parser
 
-import Boo.Lang.Compiler as BLC
+import Boo.Lang.Compiler
 
 import Boo.MonoDevelop.Util
 
 class BooParser(AbstractParser):
 	
-	_compiler = BLC.BooCompiler()
+	_compiler = Boo.Lang.Compiler.BooCompiler()
 	
 	def constructor():
 		super("Boo", BooMimeType)
-		pipeline = BLC.CompilerPipeline()
-		pipeline.Add(BLC.Steps.InitializeTypeSystemServices())
-		pipeline.Add(BLC.Steps.IntroduceModuleClasses())
+		pipeline = CompilerPipeline() { Steps.IntroduceModuleClasses() }
 		_compiler.Parameters.Pipeline = pipeline
 		
 	override def CanParse(fileName as string):
@@ -28,6 +26,7 @@ class BooParser(AbstractParser):
 		
 		document = ParsedDocument(fileName)
 		document.CompilationUnit = CompilationUnit(fileName)
+		if dom is null: return document
 		
 		try:
 			index = ProjectIndexFactory.ForProject(dom.Project)
@@ -43,6 +42,6 @@ class BooParser(AbstractParser):
 		doc = cast(MonoDevelop.Ide.Gui.Document, editor)
 		return BooResolver(dom, doc.CompilationUnit, fileName)
 		
-	private def IntroduceModuleClasses(module as BLC.Ast.Module):
-		return _compiler.Run(BLC.Ast.CompileUnit(module)).CompileUnit
+	private def IntroduceModuleClasses(module as Ast.Module):
+		return _compiler.Run(Ast.CompileUnit(module.CloneNode())).CompileUnit
 		

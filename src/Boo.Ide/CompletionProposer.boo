@@ -5,12 +5,37 @@ import Boo.Lang.Compiler.Ast
 import Boo.Lang.Compiler.TypeSystem
 import Boo.Lang.Compiler.TypeSystem.Core
 
-import Boo.Adt
+import Boo.Lang.Environments
 import Boo.Lang.PatternMatching
 
 import System.Linq.Enumerable
 
-data CompletionProposal(Entity as IEntity)
+class CompletionProposal:
+	_entity as IEntity
+	_name as string
+	_entityType as EntityType
+	_description as string
+	
+	Entity:
+		get: return _entity
+		
+	Name:
+		get: return _name
+		
+	EntityType:
+		get: return _entityType
+		
+	Description:
+		get: return _description
+	
+	def constructor(entity as IEntity):
+		_entity = entity
+		_name = entity.Name
+		_entityType = entity.EntityType
+		if(EntityType.Ambiguous == _entityType):
+			ambiguous = entity as Ambiguous
+			_description = "${ambiguous.Entities[0]} (${ambiguous.Entities.Length} overloads)"
+		else: _description = entity.ToString()
 
 static class CompletionProposer:
 	
@@ -63,7 +88,10 @@ static class CompletionProposer:
 							yield member
 					otherwise:
 						continue
-			currentType = currentType.BaseType
+			if currentType.IsInterface:
+				currentType = (currentType.GetInterfaces() as IType*).FirstOrDefault() or my(TypeSystemServices).ObjectType
+			else:
+				currentType = currentType.BaseType
 			
 	_specialPrefixes = { "get_": 1, "set_": 1, "add_": 1, "remove_": 1, "op_": 1 }
 	
