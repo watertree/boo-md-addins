@@ -46,6 +46,12 @@
     <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <Package>nunit</Package>
     </Reference>
+    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5e9ce85b0923c84f">
+      <Package>monodevelop</Package>
+    </Reference>
+    <Reference Include="MonoDevelop.SourceEditor2, Version=2.4.0.0, Culture=neutral">
+      <Package>monodevelop-core-addins</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Boo.MonoDevelop\Boo.MonoDevelop.booproj">
