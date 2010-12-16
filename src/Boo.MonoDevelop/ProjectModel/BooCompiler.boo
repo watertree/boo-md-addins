@@ -73,6 +73,7 @@ class BooCompiler:
 		options.WriteLine("-debug" + ("+" if _config.DebugMode else "-"))
 		
 		if _compilationParameters.Ducky: options.WriteLine("-ducky") 
+		if _compilationParameters.NoStdLib: options.WriteLine("-nostdlib")
 		
 		projectFiles = item as ProjectFile for item in _projectItems if item isa ProjectFile 
 		for file in projectFiles:
