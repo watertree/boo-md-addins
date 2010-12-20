@@ -21,6 +21,7 @@
     <culture />
     <genwarnings>false</genwarnings>
     <ConsolePause>false</ConsolePause>
+    <nostdlib>false</nostdlib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -30,6 +31,7 @@
     <culture />
     <genwarnings>false</genwarnings>
     <ConsolePause>false</ConsolePause>
+    <nostdlib>false</nostdlib>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

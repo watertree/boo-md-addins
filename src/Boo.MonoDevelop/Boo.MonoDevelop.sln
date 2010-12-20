@@ -23,6 +23,8 @@ Project("{B3672514-7503-4B01-B4B4-B44E87061EA2}") = "UnityScript.Ide", "..\Unity
 EndProject
 Project("{B3672514-7503-4B01-B4B4-B44E87061EA2}") = "UnityScript.Ide.Tests", "..\UnityScript.Ide.Tests\UnityScript.Ide.Tests.booproj", "{A0F2C421-3C9C-45F1-9CA1-839C73D2B953}"
 EndProject
+Project("{B3672514-7503-4B01-B4B4-B44E87061EA2}") = "Boo.Lang.CodeDom", "..\..\..\boo\src\Boo.Lang.CodeDom\Boo.Lang.CodeDom.booproj", "{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{53D5E189-64E0-49A6-A8F3-505599E84639}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53D5E189-64E0-49A6-A8F3-505599E84639}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53D5E189-64E0-49A6-A8F3-505599E84639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0F2C421-3C9C-45F1-9CA1-839C73D2B953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0F2C421-3C9C-45F1-9CA1-839C73D2B953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0F2C421-3C9C-45F1-9CA1-839C73D2B953}.Release|Any CPU.ActiveCfg = Release|Any CPU

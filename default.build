@@ -196,6 +196,9 @@
 				<include name="${build.dir}/Boo.MonoDevelop.Util.dll" />
 				<include name="${build.dir}/Boo.Ide.dll" />
 			</references>
+			<pkg-references>
+				<package name="gtk-sharp-2.0" />
+			</pkg-references>
 			
 			<embed basedir="src/Boo.MonoDevelop">
 				<include name="Boo.MonoDevelop.addin.xml" />

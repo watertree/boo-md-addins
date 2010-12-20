@@ -20,6 +20,7 @@
     <ducky>false</ducky>
     <culture />
     <genwarnings>false</genwarnings>
+    <nostdlib>false</nostdlib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -28,6 +29,7 @@
     <ducky>false</ducky>
     <culture />
     <genwarnings>false</genwarnings>
+    <nostdlib>false</nostdlib>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,6 +52,9 @@
     <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5e9ce85b0923c84f">
       <Package>monodevelop</Package>
     </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
@@ -67,6 +72,7 @@
     <Compile Include="IO.boo" />
     <Compile Include="Editor\BooIndentation.boo" />
     <Compile Include="Completion\BooParameterDataProvider.boo" />
+    <Compile Include="ProjectModel\GUI\BooCompilationParametersPanel.boo" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Boo.MonoDevelop.addin.xml">
@@ -116,11 +122,16 @@
       <Project>{C79506C7-C4C4-424F-95AA-132B7DDF5AF9}</Project>
       <Name>Boo.Ide</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\boo\src\Boo.Lang.CodeDom\Boo.Lang.CodeDom.booproj">
+      <Project>{9C3A3730-CFB9-41FA-9DFC-54918C6EE2B6}</Project>
+      <Name>Boo.Lang.CodeDom</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Refactoring\" />
     <Folder Include="Completion\" />
     <Folder Include="Completion\" />
     <Folder Include="Editor\" />
+    <Folder Include="ProjectModel\GUI\" />
   </ItemGroup>
 </Project>
