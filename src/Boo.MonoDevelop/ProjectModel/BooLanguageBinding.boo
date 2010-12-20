@@ -40,7 +40,7 @@ class BooLanguageBinding(BooIdeLanguageBinding, IDotNetLanguageBinding):
 		return baseName + ".boo"
 		
 	def GetCodeDomProvider():
-		return BooCodeDomProvider()
+		return Boo.Lang.CodeDom.BooCodeProvider()
 		
 	def CreateProjectParameters(projectOptions as XmlElement):
 		return BooProjectParameters()

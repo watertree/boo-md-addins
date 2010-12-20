@@ -192,6 +192,7 @@
 				<include name="${md.bin.dir}/../AddIns/MonoDevelop.Refactoring/MonoDevelop.Refactoring.dll" />
 				<include name="${boo.extensions.build.dir}/Boo.Adt.dll" />
 				<include name="${boo.extensions.build.dir}/Boo.Lang.Parser.dll" />
+				<include name="${boo.extensions.build.dir}/Boo.Lang.CodeDom.dll" />
 				<include name="${build.dir}/Boo.MonoDevelop.Util.dll" />
 				<include name="${build.dir}/Boo.Ide.dll" />
 			</references>

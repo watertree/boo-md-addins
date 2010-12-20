@@ -54,8 +54,6 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectModel\BooCodeDomProvider.boo" />
-    <Compile Include="ProjectModel\BooCodeGenerator.boo" />
     <Compile Include="ProjectModel\BooCompilationParameters.boo" />
     <Compile Include="ProjectModel\BooCompiler.boo" />
     <Compile Include="ProjectModel\BooLanguageBinding.boo" />
