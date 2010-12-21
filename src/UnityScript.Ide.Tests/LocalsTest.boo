@@ -7,7 +7,7 @@ import UnityScript.Ide
 class LocalsTest:
 	[Test]
 	def ReturnsNoLocals():
-		code = ReIndent("""
+		code = """
 class Foo{
 	var baz = 4.2;
 	function Bar(){
@@ -18,7 +18,7 @@ class Foo{
 		var blah = 12;
 	}
 }
-""")
+"""
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
@@ -26,7 +26,7 @@ class Foo{
 		
 	[Test]
 	def ReturnsCorrectLocals():
-		code = ReIndent("""
+		code = """
 class Foo{
 	function Bar(){
 		baz = 4.2;
@@ -37,7 +37,7 @@ class Foo{
 		blah = 12;
 	}
 }
-""")
+"""
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
@@ -46,7 +46,7 @@ class Foo{
 		
 	[Test]
 	def ReturnsMethodParams():
-		code = ReIndent("""
+		code = """
 class Foo{
 	function Bar(baz: int){
 		baz = 4.2;
@@ -57,7 +57,7 @@ class Foo{
 		blah = 12;
 	}
 }
-""")
+"""
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
@@ -66,7 +66,7 @@ class Foo{
 		
 	[Test]
 	def ReturnsConstructorParams():
-		code = ReIndent("""
+		code = """
 class Foo{
 	function Foo(baz: int){
 		baz = 4.2;
@@ -77,7 +77,7 @@ class Foo{
 		blah = 12;
 	}
 }
-""")
+"""
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)

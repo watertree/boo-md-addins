@@ -51,6 +51,7 @@
     <Compile Include="ImportsTest.boo" />
     <Compile Include="MethodsTest.boo" />
     <Compile Include="LocalsTest.boo" />
+    <Compile Include="Globals.boo" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Boo.Ide\Boo.Ide.booproj">

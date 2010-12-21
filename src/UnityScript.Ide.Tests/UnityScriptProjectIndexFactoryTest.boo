@@ -45,7 +45,7 @@ class UnityScriptProjectIndexFactoryTest:
 	def ProposalsForExternalReferences():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		index.AddReference(Assembly.Load("System.Xml"))
-		code = ReIndent("""
+		code = """
 import System.Xml;
 
 class Foo
@@ -54,7 +54,7 @@ class Foo
 		new XmlDocument().$CursorLocation
 	}
 }
-""")
+"""
 		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		for proposal in proposals:
@@ -64,11 +64,11 @@ class Foo
 	[Test]
 	def ProposalsForThis():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		code = ReIndent("""
+		code = """
 	function foo() {
 		this.$CursorLocation
 	}
-""")
+"""
 		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ("foo",) + MonoBehaviourMemberNames()
@@ -77,21 +77,21 @@ class Foo
 	[Test]
 	def ProposalsForSibling():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = ReIndent("""
+		siblingCode = """
 class Foo
 {
 	function foo() {
 	}
 }
-""")
-		code = ReIndent("""
+"""
+		code = """
 class Bar
 {
 	function bar() {
 		new Foo().$CursorLocation
 	}
 }
-""")
+"""
 		siblingFile = Path.GetTempFileName()
 		File.WriteAllText(siblingFile, siblingCode)
 		index.Update(siblingFile, siblingCode)
@@ -103,21 +103,21 @@ class Bar
 	[Test]
 	def StaticProposalsForSibling():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = ReIndent("""
+		siblingCode = """
 class Foo
 {
 	static function foo() {
 	}
 }
-""")
-		code = ReIndent("""
+"""
+		code = """
 class Bar
 {
 	function bar() {
 		Foo.$CursorLocation
 	}
 }
-""")
+"""
 		siblingFile = Path.GetTempFileName()
 		File.WriteAllText(siblingFile, siblingCode)
 		index.Update(siblingFile, siblingCode)
@@ -130,21 +130,21 @@ class Bar
 	def ProposalsForSiblingProject():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		siblingIndex = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = ReIndent("""
+		siblingCode = """
 class Foo
 {
 	function foo() {
 	}
 }
-""")
-		code = ReIndent("""
+"""
+		code = """
 class Bar
 {
 	function bar() {
 		new Foo().$CursorLocation
 	}
 }
-""")
+"""
 		siblingFile = Path.GetTempFileName()
 		File.WriteAllText(siblingFile, siblingCode)
 		siblingIndex.Update(siblingFile, siblingCode)
@@ -157,14 +157,14 @@ class Bar
 	[Test]
 	def ProposalsForMembersOfImplicitlyImportedTypes():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		code = ReIndent("""
+		code = """
 class Foo
 {
 	function foo() {
 		ArrayList.$CursorLocation
 	}
 }
-""")
+"""
 		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ["Adapter","Synchronized","ReadOnly","FixedSize","Repeat","Equals","ReferenceEquals"].ToArray(typeof(string))
@@ -173,29 +173,14 @@ class Foo
 	[Test]
 	def ProposalsForTypeReferenceIncludeOnlyStaticMethods():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		code = ReIndent("""
+		code = """
 			class Foo {
 				static function NewInstance(): Foo { return null; }
 				function Bar(){}
 			}
 			Foo.$CursorLocation
-		""")
+		"""
 		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ("NewInstance", "Equals", "ReferenceEquals")
 		AssertProposalNames(expected, proposals)
-		
-def ReIndent(code as string):	
-	lines = NonEmptyLines(code)
-
-	firstLine = lines[0]
-	indentation = /(\s*)/.Match(firstLine).Groups[0].Value
-	return code if len(indentation) == 0
-
-	buffer = System.Text.StringBuilder()
-	for line in lines:
-		if not line.StartsWith(indentation):
-			return code // let the parser complain about it
-		buffer.AppendLine(line[len(indentation):])
-	return buffer.ToString()
-	

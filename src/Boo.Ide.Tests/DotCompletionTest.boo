@@ -187,33 +187,8 @@ def ProposalsFor(code as string):
 	return index.ProposalsFor("code.boo", ReIndent(code))
 		
 def AssertProposalNames(expected as (string), actual as (CompletionProposal)):
-	if (expected is null or actual is null):
-		Assert.AreEqual (expected, actual)
-	else:
-		Assert.AreEqual(expected.Length, actual.Length)
-		for proposal in actual:
-			Assert.Contains(proposal.Entity.Name, expected)
+	actualNames = array(p.Entity.Name for p in actual)
+	System.Array.Sort(expected)
+	System.Array.Sort(actualNames)
+	Assert.AreEqual(expected, actualNames)
 	
-def SystemObjectMemberNames():
-	return "Equals", "GetHashCode", "GetType", "ToString"
-	
-def MonoBehaviourMemberNames():
-	return ("Main",) + SystemObjectMemberNames()
-		
-def ReIndent(code as string):	
-	lines = NonEmptyLines(code)
-
-	firstLine = lines[0]
-	indentation = /(\s*)/.Match(firstLine).Groups[0].Value
-	return code if len(indentation) == 0
-
-	buffer = System.Text.StringBuilder()
-	for line in lines:
-		if not line.StartsWith(indentation):
-			return code // let the parser complain about it
-		buffer.AppendLine(line[len(indentation):])
-	return buffer.ToString()
-	
-def NonEmptyLines(s as string):
-	lines = s.Replace("\r\n", "\n").Split(char('\n'))
-	return array(line for line in lines if len(line.Trim()))
