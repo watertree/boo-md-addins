@@ -103,6 +103,17 @@ class DomConversionVisitor(DepthFirstVisitor):
 			_currentType.Add(converted)
 		except x:
 			print x, x.InnerException
+			
+	override def OnEvent(node as Event):
+		if _currentType is null: return
+		
+		converted = MD.DomEvent(
+							Name: node.Name,
+							ReturnType: ParameterTypeFrom(node.Type),
+							Location: LocationOf(node),
+							BodyRegion: BodyRegionOf(node),
+							DeclaringType: _currentType)
+		_currentType.Add(converted)
 							
 	override def OnEnumMember(node as EnumMember):
 		if _currentType is null: return
