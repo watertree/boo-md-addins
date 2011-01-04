@@ -31,6 +31,15 @@
 		<Addin id="SourceEditor2" version="2.4" />
 	</Dependencies>
 	
+	<Extension path="/MonoDevelop/Core/SupportPackages">
+		<Condition id="PackageNotInstalled" name="mono-unityscript" version="0.9.4">
+			<Package name="unityscript" version="0.9.4" clrVersion="Default">
+				<Assembly file="unityscript/UnityScript.Lang.dll" />
+				<Assembly file="unityscript/UnityScript.dll" />
+			</Package>
+		</Condition>
+	</Extension>
+	
 	<Extension path = "/MonoDevelop/Ide/FileTemplates">
 		<FileTemplate id = "UnityScriptEmptyFile" resource = "EmptyUnityScriptFile.xft.xml"/>
 	</Extension>
