@@ -3,17 +3,21 @@ namespace UnityScript.Ide
 import UnityScript
 import Boo.Lang.Compiler.Steps
 
+import System.Linq.Enumerable
+
 class ResolveMonoBehaviourType(AbstractCompilerStep):
 	
 	override def Run():
+		unityScriptParameters = Parameters as UnityScriptCompilerParameters
+		if unityScriptParameters.ScriptBaseType is not null:
+			print "ScriptBaseType is already set"
+			return
+			
 		type = FindReferencedType("UnityEngine.MonoBehaviour")
-		(Parameters as UnityScriptCompilerParameters).ScriptBaseType = type or object
+		unityScriptParameters.ScriptBaseType = type or object
 			
 	def FindReferencedType(typeName as string):
-		for reference in Parameters.References:
-			assemblyRef = reference as Boo.Lang.Compiler.TypeSystem.Reflection.IAssemblyReference
-			if assemblyRef is null:
-				continue
+		for assemblyRef in Parameters.References.OfType[of Boo.Lang.Compiler.TypeSystem.Reflection.IAssemblyReference]():
 			type = assemblyRef.Assembly.GetType(typeName)
 			if type is not null:
 				return type
