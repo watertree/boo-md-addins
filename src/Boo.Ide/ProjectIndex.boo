@@ -138,10 +138,10 @@ class ProjectIndex:
 	virtual def Update(fileName as string, contents as string):
 		unit as CompileUnit
 		
-		if(_contexts.ContainsKey(fileName)):
+		if _contexts.ContainsKey(fileName):
 			unit = _contexts[fileName].CompileUnit
 			oldModule = GetModuleForFileFromContext(_contexts[fileName], fileName)
-			if(null != oldModule): unit.Modules.Remove(oldModule)
+			if oldModule is not null: unit.Modules.Remove(oldModule)
 		else:
 			unit = CompileUnitIncludingAllModulesAndReferencedProjectsExcluding(fileName)
 			
