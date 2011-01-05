@@ -158,25 +158,15 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return CompleteMembersUsing(context, text, null)
 		
 	def CompleteMembersUsing(context as CodeCompletionContext, text as string, result as BooCompletionDataList):
-		if(null == result): result = BooCompletionDataList()
-		work = def():
-			proposals =  _index.ProposalsFor(Document.FileName, text)
-			if (0 == proposals.Length):
-				callback = def():
-					result.IsChanging = false
-			else:
-				callback = def():
-					result.IsChanging = true
-					for proposal in proposals:
-						member = proposal.Entity
-						result.Add(CompletionData(member.Name, IconForEntity(member), proposal.Description))
-					result.IsChanging = false
-			DispatchService.GuiDispatch(callback)
-		ThreadPool.QueueUserWorkItem(work)
+		if result is null: result = BooCompletionDataList()
+		proposals = _index.ProposalsFor(Document.FileName, text)
+		for proposal in proposals:
+			member = proposal.Entity
+			result.Add(CompletionData(member.Name, IconForEntity(member), proposal.Description))
 		return result
 		
 	def CompleteVisible(context as CodeCompletionContext):
-		completions = BooCompletionDataList()
+		completions = BooCompletionDataList(IsChanging: true)
 		completions.AddRange(CompletionData(k, Stock.Literal) for k in Keywords)
 		completions.AddRange(CompletionData(p, Stock.Literal) for p in Primitives)
 		text = string.Format ("{0}{1}.{2}{3} {4}", Document.TextEditor.GetText (0, context.TriggerOffset-1),

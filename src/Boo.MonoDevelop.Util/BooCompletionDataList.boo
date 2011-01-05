@@ -18,11 +18,7 @@ class BooCompletionDataList(CompletionDataList, IMutableCompletionDataList):
 				OnChanging(self, null)
 			elif wasChanging and not _isChanging:
 				OnChanged(self, null)
-			
-	def constructor():
-		super()
-		IsChanging = true
-		
+				
 	def Dispose():
 		pass
 
