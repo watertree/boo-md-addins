@@ -104,35 +104,22 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 			return line[start:end].Trim()
 		return string.Empty
 				
-	def ImportCompletionDataFor(nameSpace as string, filterMatches as MonoDevelop.Projects.Dom.MemberType*, result as BooCompletionDataList):
-		if result is null:
-			result = BooCompletionDataList(IsChanging: true)
-		
-		if string.IsNullOrEmpty(nameSpace):
-			text = Document.TextEditor.Text
-			filename = Document.FileName
-			
-			work = def():
-				namespaces = List of string() { nameSpace }
-				for ns in _index.ImportsFor(filename, text):
-					namespaces.AddUnique(ns)
-				if (0 == namespaces.Count):
-					callback = def():
-						result.IsChanging = false
-				else:
-					callback = def():
-						result.IsChanging = true
-						seen = {}
-						for ns in namespaces:
-							for member in _dom.GetNamespaceContents(ns, true, true):
-								if (member.Name in seen or \
-								    (null != filterMatches and not member.MemberType in filterMatches)):
-									continue
-								seen.Add(member.Name, member)
-								result.Add(CompletionData(member.Name, member.StockIcon))
-						result.IsChanging = false
-				DispatchService.GuiDispatch(callback)
-			ThreadPool.QueueUserWorkItem(work)
+	def AddGloballyVisibleAndImportedSymbolsTo(result as BooCompletionDataList):
+		ThreadPool.QueueUserWorkItem() do:
+			namespaces = List of string() { string.Empty }
+			for ns in _index.ImportsFor(Document.FileName, Document.TextEditor.Text):
+				namespaces.AddUnique(ns)
+			callback = def():
+				result.IsChanging = true
+				seen = {}
+				for ns in namespaces:
+					for member in _dom.GetNamespaceContents(ns, true, true):
+						if member.Name in seen:
+							continue
+						seen.Add(member.Name, member)
+						result.Add(CompletionData(member.Name, member.StockIcon))
+				result.IsChanging = false
+			DispatchService.GuiDispatch(callback)
 		return result
 		
 	virtual def CompleteNamespace(context as CodeCompletionContext):
@@ -142,13 +129,25 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	virtual def CompleteNamespacesForPattern(context as CodeCompletionContext, pattern as Regex, \
 		                                     capture as string, filterMatches as MonoDevelop.Projects.Dom.MemberType*):
 		lineText = GetLineText(context.TriggerLine)
-		matches = pattern.Match (lineText)
+		matches = pattern.Match(lineText)
 		
-		if (null != matches and matches.Success and \
-		    context.TriggerLineOffset > matches.Groups[capture].Index + matches.Groups[capture].Length):
-			nameSpace = matches.Groups[capture].Value
-			return ImportCompletionDataFor(nameSpace, filterMatches, null)
-		return null
+		if not matches.Success:
+			return null
+			
+		if context.TriggerLineOffset <= matches.Groups[capture].Index + matches.Groups[capture].Length:
+			return null
+			
+		nameSpace = matches.Groups[capture].Value
+		result = CompletionDataList()
+		seen = {}
+		for member in _dom.GetNamespaceContents(nameSpace, true, true):
+			if member.Name in seen:
+				continue
+			if member.MemberType not in filterMatches:
+				continue
+			seen.Add(member.Name, member)
+			result.Add(CompletionData(member.Name, member.StockIcon))
+		return result
 		
 	def CompleteMembers(context as CodeCompletionContext):
 		text = string.Format ("{0}{1} {2}", Document.TextEditor.GetText (0, context.TriggerOffset),
@@ -177,7 +176,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		CompleteMembersUsing(context, text, completions)
 			
 		# Add globally visible
-		ImportCompletionDataFor(string.Empty, null, completions)
+		AddGloballyVisibleAndImportedSymbolsTo(completions)
 		work = def():
 			locals = _index.LocalsAt(Document.FileName.FullPath, text, context.TriggerLine-1)
 			if (0 == locals.Count):
