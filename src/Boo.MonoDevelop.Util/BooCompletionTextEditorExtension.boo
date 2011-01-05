@@ -75,9 +75,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	override def CodeCompletionCommand(context as CodeCompletionContext):
 		pos = context.TriggerOffset
 		list = HandleCodeCompletion(context, Editor.GetText(pos-1, pos)[0])
-		if list is null:
-			list = CompleteVisible(context)
-		return list
+		if list is not null:
+			return list
+		return CompleteVisible(context)
 		
 	def GetToken(context as CodeCompletionContext):
 		line = GetLineText(context.TriggerLine)
