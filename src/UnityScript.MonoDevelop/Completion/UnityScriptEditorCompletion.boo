@@ -171,11 +171,9 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 		return null
 		
 	def CompleteTypePatterns(context as CodeCompletionContext):
-		completions as CompletionDataList = null
-		types = List[of MemberType]()
-		types.Add(MemberType.Namespace)
-		types.Add(MemberType.Type)
+		types = List[of MemberType]() { MemberType.Namespace, MemberType.Type }
 		
+		completions as CompletionDataList
 		for pattern in TYPE_PATTERNS:
 			
 			if (null != (completions = CompleteNamespacesForPattern(context, pattern, "namespace", types))):
