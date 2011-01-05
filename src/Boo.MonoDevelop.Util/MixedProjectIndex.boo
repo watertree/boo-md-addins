@@ -1,10 +1,7 @@
 namespace Boo.MonoDevelop.Util
 
 import System
-import System.IO
-
 import Boo.Ide
-import MonoDevelop.Core
 import MonoDevelop.Projects
 
 class MixedProjectIndex(ProjectIndex):
