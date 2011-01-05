@@ -163,7 +163,7 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		return null
 				
 	def CompleteNamespacePatterns(context as CodeCompletionContext):
-		types = List[of MemberType]() { MemberType.Namespace }
+		types = List[of MemberType]() { MemberType.Namespace, MemberType.Type }
 		
 		for pattern in NAMESPACE_PATTERNS:
 			completions = CompleteNamespacesForPattern(context, pattern, "namespace", types)
