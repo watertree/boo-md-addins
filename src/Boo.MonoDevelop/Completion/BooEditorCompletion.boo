@@ -120,9 +120,6 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		
 	override Primitives:
 		get: return PRIMITIVES
-	
-	override def Initialize():
-		super()
 		
 	override def HandleCodeCompletion(context as CodeCompletionContext, completionChar as char):
 		triggerWordLength = 0
