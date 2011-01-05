@@ -98,3 +98,6 @@ class Foo
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ("NewInstance", "Equals", "ReferenceEquals")
 		AssertProposalNames(expected, proposals)
+
+def MonoBehaviourMemberNames():
+	return ("Main",) + SystemObjectMemberNames()

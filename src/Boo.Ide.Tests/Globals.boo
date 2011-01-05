@@ -5,9 +5,6 @@ import System.Linq.Enumerable
 def SystemObjectMemberNames():
 	return "Equals", "GetHashCode", "GetType", "ToString"
 	
-def MonoBehaviourMemberNames():
-	return ("Main",) + SystemObjectMemberNames()
-		
 def ReIndent(code as string):	
 	lines = code.Replace("\r\n", "\n").Split(char('\n'))
 	nonEmptyLines = line for line in lines if len(line.Trim())
