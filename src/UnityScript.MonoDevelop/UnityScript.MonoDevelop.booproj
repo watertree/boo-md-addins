@@ -54,8 +54,7 @@
       <Package>monodevelop</Package>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=40c86c8e7b5dc1eb">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5e9ce85b0923c84f">
       <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
