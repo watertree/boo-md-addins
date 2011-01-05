@@ -109,13 +109,10 @@ class ProjectIndex:
 		_compiler.Parameters.LoadAssembly(reference, false)
 		
 	private def GetModuleForFileFromContext(context as CompilerContext, fileName as string):
-		index = -1
-		for i in range(0, context.CompileUnit.Modules.Count):
-			if(context.CompileUnit.Modules[i].LexicalInfo.FileName == fileName):
-				index = i
-				break
-		if(0 <= index): return context.CompileUnit.Modules[index]
-		else: return null
+		for m in context.CompileUnit.Modules:
+			if m.LexicalInfo.FileName == fileName:
+				return m
+		return null
 		
 	private def ParseModule(unit as CompileUnit, fileName as string, contents as string):
 		try:
