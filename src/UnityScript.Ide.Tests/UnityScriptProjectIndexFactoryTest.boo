@@ -20,6 +20,7 @@ class UnityScriptProjectIndexFactoryTest:
 		AssertProposalNames(expected, proposals)
 		
 	[Test]
+	[Ignore("Work in progress")]
 	def ParseReturnsCodeWithUnityScriptSemantics():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
 		module = index.Parse("Code.js", "function foo() {}")
