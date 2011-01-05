@@ -82,7 +82,7 @@ class Foo
 }
 """
 		proposals = index.ProposalsFor("code.js", code)
-		expected = ["Adapter","Synchronized","ReadOnly","FixedSize","Repeat","Equals","ReferenceEquals"].ToArray(typeof(string))
+		expected = ("Adapter","Synchronized","ReadOnly","FixedSize","Repeat","Equals","ReferenceEquals")
 		AssertProposalNames(expected, proposals)
 		
 	[Test]
