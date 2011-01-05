@@ -105,16 +105,15 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return string.Empty
 				
 	def ImportCompletionDataFor(nameSpace as string, filterMatches as MonoDevelop.Projects.Dom.MemberType*, result as BooCompletionDataList):
-		if(null == result):
-			result = BooCompletionDataList()
-		namespaces = List of string()
-		namespaces.Add(nameSpace)
+		if result is null:
+			result = BooCompletionDataList(IsChanging: true)
 		
-		if(string.IsNullOrEmpty(nameSpace)):
+		if string.IsNullOrEmpty(nameSpace):
 			text = Document.TextEditor.Text
 			filename = Document.FileName
 			
 			work = def():
+				namespaces = List of string() { nameSpace }
 				for ns in _index.ImportsFor(filename, text):
 					namespaces.AddUnique(ns)
 				if (0 == namespaces.Count):
