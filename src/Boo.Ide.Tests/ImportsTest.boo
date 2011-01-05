@@ -14,7 +14,6 @@ class ImportsTest:
 class Foo:
 	pass
 """)
-		index.Update("blah.boo", code)
 		imports = index.ImportsFor("blah.boo", code)
 		Assert.IsNotNull(imports)
 		Assert.AreEqual(2, Enumerable.Count(imports))
@@ -29,7 +28,6 @@ import System.Collections.Generic
 class Foo:
 	pass
 """)
-		index.Update("blah.boo", code)
 		imports = index.ImportsFor("blah.boo", code)
 		Assert.IsNotNull(imports)
 		Assert.AreEqual(4, Enumerable.Count(imports))

@@ -21,12 +21,9 @@ class UnityScriptParser(AbstractParser):
 		
 		document = ParsedDocument(fileName)
 		document.CompilationUnit = CompilationUnit(fileName)
-		if(null == dom): return document
+		if dom is null: return document
 		
 		try:
-			index = ProjectIndexFactory.ForProject(dom.Project)
-			assert index is not null
-			module = index.Update(fileName, content)
 			result.CompileUnit.Accept(DomConversionVisitor(document.CompilationUnit))
 		except e:
 			LogError e

@@ -17,7 +17,6 @@ class Foo{
 	}
 }
 """
-		index.Update("foo.js", code)
 		methods = index.MethodsFor("foo.js", code, "CopyTo", 5)
 		Assert.AreEqual(3, methods.Count) # List<>.CopyTo has 3 overloads
 
@@ -32,7 +31,6 @@ class Foo{
 	}
 }
 """
-		index.Update("foo.js", code)
 		methods = index.MethodsFor("foo.js", code, "ThisMethodDoesNotAndNeverWillExist", 5)
 		Assert.AreEqual(0, methods.Count)
 		

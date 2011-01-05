@@ -12,7 +12,6 @@ class ImportsTest:
 		code = """
 class Foo{}
 """
-		index.Update("blah.js", code)
 		imports = index.ImportsFor("blah.js", code)
 		Assert.IsNotNull(imports)
 		Assert.AreEqual(3, imports.Count())
@@ -26,7 +25,6 @@ import System.Collections.Generic;
 		
 class Foo{}
 """
-		index.Update("blah.js", code)
 		imports = index.ImportsFor("blah.js", code)
 		Assert.IsNotNull(imports)
 		Assert.AreEqual(5, imports.Count())

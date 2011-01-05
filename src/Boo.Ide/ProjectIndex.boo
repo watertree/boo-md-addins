@@ -15,7 +15,6 @@ class ProjectIndex:
 	_parser as BooCompiler
 	
 	_modules = List of Module()
-	_referencedProjects = List of ProjectIndex()
 	_implicitNamespaces as List
 	_contexts = System.Collections.Generic.Dictionary[of string, CompilerContext]()
 		
@@ -24,7 +23,7 @@ class ProjectIndex:
 		_compiler.Parameters.Pipeline = Pipelines.ResolveExpressions(BreakOnErrors: false)
 		
 		_parser = BooCompiler()
-		_parser.Parameters.Pipeline = Pipelines.Parse()
+		_parser.Parameters.Pipeline = Pipelines.Parse() { Steps.IntroduceModuleClasses() }
 		_implicitNamespaces = ["Boo.Lang", "Boo.Lang.Builtins"]
 	
 	def constructor(compiler as BooCompiler, parser as BooCompiler, implicitNamespaces as List):
@@ -33,16 +32,9 @@ class ProjectIndex:
 		_implicitNamespaces = implicitNamespaces
 		
 	[lock]
-	def Initialize(files as string*):
-		unit = CompileUnit()
-		for project in _referencedProjects:
-			unit.Modules.ExtendWithClones(project._modules)
-		for file in files:
-			try:
-				_modules.Add(ParseModule(unit, file, System.IO.File.ReadAllText(file)))
-			except e:
-				print "Error adding ${file}: ${e.Message}"
-	
+	virtual def Parse(fileName as string, code as string):
+		return ParseModule(CompileUnit(), fileName, code)
+		
 	[lock]
 	virtual def ProposalsFor(fileName as string, code as string):
 		result = {}
@@ -63,20 +55,6 @@ class ProjectIndex:
 					result[proposal.Name] = proposal
 			
 		return array(CompletionProposal,result.Values)
-		
-	def GetModuleForFileFromContext(context as CompilerContext, fileName as string):
-		index = -1
-		for i in range(0, context.CompileUnit.Modules.Count):
-			if(context.CompileUnit.Modules[i].LexicalInfo.FileName == fileName):
-				index = i
-				break
-		if(0 <= index): return context.CompileUnit.Modules[index]
-		else: return null
-		
-	def GetModuleForFile(fileName as string):
-		index = _modules.IndexOf({ m as Module | m.LexicalInfo.FileName == fileName })
-		if(0 <= index): return _modules[index]
-		else: return null
 		
 	[lock]
 	virtual def MethodsFor(fileName as string, code as string, methodName as string, methodLine as int):
@@ -123,10 +101,6 @@ class ProjectIndex:
 		return imports
 		
 	[lock]
-	virtual def AddReference(project as ProjectIndex):
-		_referencedProjects.Add(project)
-		
-	[lock]
 	virtual def AddReference(assembly as System.Reflection.Assembly):
 		_compiler.Parameters.References.Add(assembly)
 		
@@ -134,25 +108,14 @@ class ProjectIndex:
 	virtual def AddReference(reference as string):
 		_compiler.Parameters.LoadAssembly(reference, false)
 		
-	[lock]
-	virtual def Update(fileName as string, contents as string):
-		unit = CompileUnitIncludingAllModulesAndReferencedProjectsExcluding(fileName)
-		module = ParseModule(unit, fileName, contents)
-		existing = _modules.IndexOf({ m as Module | m.LexicalInfo.FileName == fileName })
-		if existing < 0:
-			_modules.Add(module)
-		else:
-			_modules[existing] = module
-		return module
-		
-	private def CompileUnitIncludingAllModulesAndReferencedProjectsExcluding(fileName as string):
-		unit = CompileUnit()
-		for module in _modules:
-			continue if module.LexicalInfo.FileName == fileName
-			unit.Modules.Add(module.Clone())
-		for project in _referencedProjects:
-			unit.Modules.ExtendWithClones(project._modules)
-		return unit
+	private def GetModuleForFileFromContext(context as CompilerContext, fileName as string):
+		index = -1
+		for i in range(0, context.CompileUnit.Modules.Count):
+			if(context.CompileUnit.Modules[i].LexicalInfo.FileName == fileName):
+				index = i
+				break
+		if(0 <= index): return context.CompileUnit.Modules[index]
+		else: return null
 		
 	private def ParseModule(unit as CompileUnit, fileName as string, contents as string):
 		try:

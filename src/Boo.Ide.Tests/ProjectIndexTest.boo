@@ -25,8 +25,6 @@ class ProjectIndexTest:
 		compiler.Parameters.Pipeline = CompilerPipeline() { ActionStep({ compiled = true }) }
 		
 		index = ProjectIndex(compiler, parser, ["UnityEngine"])
-		Assert.AreSame(m, index.Update("code.js", ""))
-		
 		assert index.ProposalsFor("code.js", "") is not null
 		assert compiled
 

@@ -1,6 +1,5 @@
 namespace UnityScript.Ide.Tests
 
-import System.IO
 import System.Reflection
 
 import NUnit.Framework
@@ -16,16 +15,14 @@ class UnityScriptProjectIndexFactoryTest:
 	def ProposalsForUnityScriptCode():
 		
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		index.Update("code.js", "class Foo { function Bar() {} }; new Foo().$CursorLocation")
 		proposals = index.ProposalsFor("code.js", "class Foo { function Bar() {} }; new Foo().$CursorLocation")
-		
 		expected = ("Bar",) + SystemObjectMemberNames()
 		AssertProposalNames(expected, proposals)
 		
 	[Test]
-	def UpdateModuleReturnsCodeWithUnityScriptSemantics():
+	def ParseReturnsCodeWithUnityScriptSemantics():
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		module = index.Update("Code.js", "function foo() {}")
+		module = index.Parse("Code.js", "function foo() {}")
 		expected = [|
 			import UnityEngine
 			import UnityEditor
@@ -55,7 +52,6 @@ class Foo
 	}
 }
 """
-		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		for proposal in proposals:
 			if(proposal.Entity.Name == "CreateXmlDeclaration"): return
@@ -69,90 +65,10 @@ class Foo
 		this.$CursorLocation
 	}
 """
-		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ("foo",) + MonoBehaviourMemberNames()
 		AssertProposalNames(expected, proposals)
 		
-	[Test]
-	def ProposalsForSibling():
-		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = """
-class Foo
-{
-	function foo() {
-	}
-}
-"""
-		code = """
-class Bar
-{
-	function bar() {
-		new Foo().$CursorLocation
-	}
-}
-"""
-		siblingFile = Path.GetTempFileName()
-		File.WriteAllText(siblingFile, siblingCode)
-		index.Update(siblingFile, siblingCode)
-		index.Update("code.js", code)
-		proposals = index.ProposalsFor("code.js", code)
-		expected = ("foo",) + SystemObjectMemberNames()
-		AssertProposalNames(expected, proposals)
-		
-	[Test]
-	def StaticProposalsForSibling():
-		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = """
-class Foo
-{
-	static function foo() {
-	}
-}
-"""
-		code = """
-class Bar
-{
-	function bar() {
-		Foo.$CursorLocation
-	}
-}
-"""
-		siblingFile = Path.GetTempFileName()
-		File.WriteAllText(siblingFile, siblingCode)
-		index.Update(siblingFile, siblingCode)
-		index.Update("code.js", code)
-		proposals = index.ProposalsFor("code.js", code)
-		expected = ("foo","Equals","ReferenceEquals")
-		AssertProposalNames(expected, proposals)
-		
-	[Test]
-	def ProposalsForSiblingProject():
-		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingIndex = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		siblingCode = """
-class Foo
-{
-	function foo() {
-	}
-}
-"""
-		code = """
-class Bar
-{
-	function bar() {
-		new Foo().$CursorLocation
-	}
-}
-"""
-		siblingFile = Path.GetTempFileName()
-		File.WriteAllText(siblingFile, siblingCode)
-		siblingIndex.Update(siblingFile, siblingCode)
-		index.AddReference(siblingIndex)
-		index.Update("code.js", code)
-		proposals = index.ProposalsFor("code.js", code)
-		expected = ("foo",) + SystemObjectMemberNames()
-		AssertProposalNames(expected, proposals)
 		
 	[Test]
 	def ProposalsForMembersOfImplicitlyImportedTypes():
@@ -165,7 +81,6 @@ class Foo
 	}
 }
 """
-		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ["Adapter","Synchronized","ReadOnly","FixedSize","Repeat","Equals","ReferenceEquals"].ToArray(typeof(string))
 		AssertProposalNames(expected, proposals)
@@ -180,7 +95,6 @@ class Foo
 			}
 			Foo.$CursorLocation
 		"""
-		index.Update("code.js", code)
 		proposals = index.ProposalsFor("code.js", code)
 		expected = ("NewInstance", "Equals", "ReferenceEquals")
 		AssertProposalNames(expected, proposals)

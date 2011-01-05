@@ -20,7 +20,6 @@ class Foo{
 }
 """
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
 		Assert.IsEmpty(locals)
 		
@@ -39,7 +38,6 @@ class Foo{
 }
 """
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
 		Assert.Contains("baz", locals)
 		Assert.IsFalse(locals.Contains("blah"))
@@ -59,7 +57,6 @@ class Foo{
 }
 """
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
 		Assert.Contains("baz", locals)
 		Assert.IsFalse(locals.Contains("blah"))
@@ -79,7 +76,6 @@ class Foo{
 }
 """
 		index = UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex()
-		index.Update("/foo.js", code)
 		locals = index.LocalsAt("/foo.js", code, 5)
 		Assert.Contains("baz", locals)
 		Assert.IsFalse(locals.Contains("blah"))
