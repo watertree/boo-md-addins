@@ -142,7 +142,7 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 			case ".":
 				if (null != (completions = CompleteNamespacePatterns(context))):
 					return completions
-				elif (null != (completions = CompleteTypePatterns(context))):
+				if (null != (completions = CompleteTypePatterns(context))):
 					return completions
 				return CompleteMembers(context)
 			otherwise:
