@@ -4,11 +4,12 @@ import MonoDevelop.Projects
 import MonoDevelop.Ide.Gui.Dialogs
 
 import Boo.MonoDevelop.ProjectModel
+import Gtk from "gtk-sharp"
 	
 class BooCompilationParametersPanel(MultiConfigItemOptionsPanel):
 	
 	override def CreatePanelWidget():
-		_noStdLibCheckButton = Gtk.CheckButton.NewWithLabel("No standard libraries")
+		_noStdLibCheckButton = CheckButton.NewWithLabel("No standard libraries")
 		_noStdLibCheckButton.ShowAll()
 		return _noStdLibCheckButton
 	

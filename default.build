@@ -175,6 +175,15 @@
 	
 	<target name="Boo.MonoDevelop" description="MonoDevelop Boo addin" depends="Boo.MonoDevelop.Util">
 	
+		<property name="md-gdk-sharp.dll" value="${md.bin.dir}/gdk-sharp.dll" />
+		<property name="md-gtk-sharp.dll" value="${md.bin.dir}/gtk-sharp.dll" />
+		
+		<property name="gdk-sharp.dll" value="gdk-sharp.dll" />
+		<property name="gdk-sharp.dll" value="${md-gdk-sharp.dll}" if="${file::exists(md-gdk-sharp.dll)}" />
+		
+		<property name="gtk-sharp.dll" value="gtk-sharp.dll" />
+		<property name="gtk-sharp.dll" value="${md-gtk-sharp.dll}" if="${file::exists(md-gtk-sharp.dll)}" />
+	
 		<echo>${md.bin.dir}</echo>
 		<booc failonerror="true"
 			output="${build.dir}/Boo.MonoDevelop.dll"
@@ -195,10 +204,9 @@
 				<include name="${boo.extensions.build.dir}/Boo.Lang.CodeDom.dll" />
 				<include name="${build.dir}/Boo.MonoDevelop.Util.dll" />
 				<include name="${build.dir}/Boo.Ide.dll" />
+				<include name="${gdk-sharp.dll}" />
+				<include name="${gtk-sharp.dll}" />
 			</references>
-			<pkg-references>
-				<package name="gtk-sharp-2.0" />
-			</pkg-references>
 			
 			<embed basedir="src/Boo.MonoDevelop">
 				<include name="Boo.MonoDevelop.addin.xml" />
