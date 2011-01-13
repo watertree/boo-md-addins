@@ -19,7 +19,7 @@ class BooCompletionDataList(CompletionDataList, IMutableCompletionDataList):
 			elif wasChanging and not _isChanging:
 				OnChanged(self, null)
 				
-	def BooCompletionDataList():
+	def constructor():
 		AutoSelect = false
 		
 	def Dispose():
