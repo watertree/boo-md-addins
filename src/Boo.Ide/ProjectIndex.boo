@@ -90,7 +90,8 @@ class ProjectIndex:
 		
 	[lock]
 	virtual def AddReference(reference as string):
-		_compiler.Parameters.LoadAssembly(reference, false)
+		asm = _compiler.Parameters.LoadAssembly(reference, true)
+		_compiler.Parameters.References.Add(asm)
 		
 	private def WithModule(fname as string, contents as string, action as System.Action[of Module]):
 		input = _compiler.Parameters.Input
