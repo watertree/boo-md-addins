@@ -206,6 +206,7 @@
 				<include name="${build.dir}/Boo.Ide.dll" />
 				<include name="${gdk-sharp.dll}" />
 				<include name="${gtk-sharp.dll}" />
+				
 			</references>
 			
 			<embed basedir="src/Boo.MonoDevelop">
@@ -288,8 +289,8 @@
 			</fileset>
 		</copy>
 		
-		<mkdir dir="${build.dir}/unityscript" />
-		<copy todir="${build.dir}/unityscript">
+		<mkdir dir="${build.dir}/bin" />
+		<copy todir="${build.dir}/bin">
 			<fileset basedir="${unityscript.build.dir}">
 				<include name="us.exe*" />
 				<include name="UnityScript.dll*" />
@@ -303,7 +304,7 @@
 				<include name="Boo.MonoDevelop.Util.dll*" />
 				<include name="Boo.Ide.dll*" />
 				<include name="UnityScript.Ide.dll*" />
-				<include name="unityscript/**/*" />
+				<include name="bin/**/*" />
 			</fileset>
 		</copy>
 		
