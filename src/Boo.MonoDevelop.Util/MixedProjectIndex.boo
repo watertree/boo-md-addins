@@ -13,10 +13,6 @@ class MixedProjectIndex(ProjectIndex):
 		_project = project
 		_booIndex = booIndex
 		_usIndex = usIndex
-		
-		for reference in _project.References:
-			_booIndex.AddReference(reference.Reference)
-			_usIndex.AddReference(reference.Reference)
 			
 	override def ProposalsFor(filename as string, code as string):
 		return IndexForSourceFile(filename).ProposalsFor(filename, code)
@@ -30,6 +26,10 @@ class MixedProjectIndex(ProjectIndex):
 	override def AddReference(reference as System.Reflection.Assembly):
 		_usIndex.AddReference(reference)
 		_booIndex.AddReference(reference)
+		
+	override def AddReference(reference as string):
+		_booIndex.AddReference(reference)
+		_usIndex.AddReference(reference)
 				
 	override def LocalsAt(filename as string, code as string, line as int):
 		return IndexForSourceFile(filename).LocalsAt(filename, code, line)

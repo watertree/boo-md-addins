@@ -50,7 +50,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	abstract Primitives:
 		get: pass
 		
-	virtual def ProjectIndexFor(project as DotNetProject):
+	def ProjectIndexFor(project as DotNetProject):
 		return ProjectIndexFactory.ForProject(project)
 		
 	override def ExtendsEditor(doc as MonoDevelop.Ide.Gui.Document, editor as IEditableTextBuffer):

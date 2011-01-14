@@ -15,6 +15,12 @@ static class ProjectIndexFactory:
 			return indices[project]
 		
 		index = CreateIndexFor(project)
+		for reference in project.References:
+			try:
+				index.AddReference(reference.Reference)
+			except x:
+				LogError x
+				
 		indices[project] = index
 		return index
 		
