@@ -5,11 +5,12 @@ import Boo.Ide
 import UnityScript.Ide
 	
 static class ProjectIndexFactory:
-	indices = System.Collections.Generic.Dictionary[of DotNetProject,ProjectIndex]()
+	indices = System.Collections.Generic.Dictionary[of DotNetProject, ProjectIndex]()
 	
 	def ForProject(project as DotNetProject):
 		if project is null:
 			return ProjectIndex()
+		
 		if indices.ContainsKey(project):
 			return indices[project]
 		
