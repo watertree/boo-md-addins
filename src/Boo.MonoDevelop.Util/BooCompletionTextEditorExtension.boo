@@ -165,7 +165,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return result
 		
 	def CompleteVisible(context as CodeCompletionContext):
-		completions = BooCompletionDataList(IsChanging: true)
+		completions = BooCompletionDataList(IsChanging: true, AutoSelect: false)
 		completions.AddRange(CompletionData(k, Stock.Literal) for k in Keywords)
 		completions.AddRange(CompletionData(p, Stock.Literal) for p in Primitives)
 		text = string.Format ("{0}{1}.{2}{3} {4}", Document.TextEditor.GetText (0, context.TriggerOffset-1),
