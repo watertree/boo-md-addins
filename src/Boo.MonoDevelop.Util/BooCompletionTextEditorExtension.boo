@@ -138,7 +138,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 			return null
 			
 		nameSpace = matches.Groups[capture].Value
-		result = CompletionDataList()
+		result = BooCompletionDataList()
 		seen = {}
 		for member in _dom.GetNamespaceContents(nameSpace, true, true):
 			if member.Name in seen:
