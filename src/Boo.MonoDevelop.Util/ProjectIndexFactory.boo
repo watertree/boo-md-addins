@@ -12,12 +12,16 @@ static class ProjectIndexFactory:
 			return ProjectIndex()
 		if indices.ContainsKey(project):
 			return indices[project]
-		if not (project isa IBooIdeLanguageBinding):
-			indices[project] = MixedProjectIndex(project, ProjectIndex(), UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex())
-		else:
-			languageBinding as IBooIdeLanguageBinding = project.LanguageBinding
-			indices[project] = languageBinding.ProjectIndexFor(project)
-		return indices[project]
+		
+		index = CreateIndexFor(project)
+		indices[project] = index
+		return index
+		
+	private def CreateIndexFor(project as DotNetProject):
+		booLanguageBinding = project.LanguageBinding as IBooIdeLanguageBinding 
+		if booLanguageBinding is not null:
+			return booLanguageBinding.ProjectIndexFor(project)
+		return MixedProjectIndex(project, ProjectIndex(), UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex())
 			
 def LogError(x):
 	System.Console.Error.WriteLine(x)
