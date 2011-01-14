@@ -228,11 +228,22 @@
 		
 		<copy todir="${md.addins.dir}" overwrite="true">
 			<fileset basedir="${build.dir}">
+			
+				<include name="boo/**/*" />
+				
 				<include name="Boo.MonoDevelop.dll*" />
 				<include name="Boo.MonoDevelop.Util.dll*" />
 				<include name="Boo.Ide.dll*" />
+				
+				<!--
+					FIXME: SHOULD NOT BUNDLE UNITYSCRIPT LIBRARIES WITH THE BOO ADDIN
+					
+					Currently this is necessary for the case where a MixedProjectIndex
+					needs to be created from a boo script
+				-->
 				<include name="UnityScript.Ide.dll*" />
-				<include name="boo/**/*" />
+				<include name="UnityScript.dll*" />
+				<include name="UnityScript.Lang.dll*" />
 			</fileset>
 		</copy>
 	</target>
