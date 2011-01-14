@@ -9,7 +9,8 @@ class ResolveMonoBehaviourType(AbstractCompilerStep):
 	
 	override def Run():
 		unityScriptParameters = Parameters as UnityScriptCompilerParameters
-		if unityScriptParameters.ScriptBaseType is not null:
+		scriptBaseType = unityScriptParameters.ScriptBaseType
+		if scriptBaseType is not null and scriptBaseType.Name == "MonoBehaviour":
 			print "ScriptBaseType is already set"
 			return
 			
