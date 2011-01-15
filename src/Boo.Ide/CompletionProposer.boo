@@ -32,8 +32,8 @@ class CompletionProposal:
 		_entity = entity
 		_name = entity.Name
 		_entityType = entity.EntityType
-		if(EntityType.Ambiguous == _entityType):
-			ambiguous = entity as Ambiguous
+		ambiguous = entity as Ambiguous
+		if ambiguous is not null:
 			_description = "${ambiguous.Entities[0]} (${ambiguous.Entities.Length} overloads)"
 		else: _description = entity.ToString()
 

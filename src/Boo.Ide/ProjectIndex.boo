@@ -53,14 +53,14 @@ class ProjectIndex:
 			if expression is null:
 				print "No method found for ${methodName}: (${fileName}:${methodLine})"
 				return
-			if (expression.Target.Entity isa Ambiguous):
+			if expression.Target.Entity isa Ambiguous:
 				# Multiple overloads
 				for i in (expression.Target.Entity as Ambiguous).Entities:
 					methods.Add (MethodDescriptor(i))
-			elif (expression.Target.Entity isa IMethod):
+			elif expression.Target.Entity isa IMethod:
 				# May have failed resolution - try one more time
 				entity = Services.NameResolutionService().ResolveMethod((expression.Target.Entity as IMethod).DeclaringType, methodName)
-				if (entity isa Ambiguous):
+				if entity isa Ambiguous:
 					# Multiple overloads
 					for i in (expression.Target.Entity as Ambiguous).Entities:
 						methods.Add (MethodDescriptor(i))
