@@ -11,8 +11,5 @@ class MethodDescriptor:
 	
 	def constructor(method as IMethod):
 		_name = method.Name
-		arguments = System.Collections.Generic.List of string()
-		for param in method.GetParameters():
-			arguments.Add("${param.Name} as ${param.Type}")
-		_arguments = arguments
+		_arguments = List of string("${param.Name} as ${param.Type}" for param in method.GetParameters())
 		_returnType = "${method.ReturnType}"

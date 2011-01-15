@@ -46,7 +46,7 @@ class ProjectIndex:
 		
 	[lock]
 	virtual def MethodsFor(fileName as string, code as string, methodName as string, methodLine as int):
-		methods = System.Collections.Generic.List of MethodDescriptor()
+		methods = List of MethodDescriptor()
 		
 		WithModule(fileName, code) do (module):
 			expression = MethodInvocationFinder(methodName, fileName, methodLine).FindIn(module)
@@ -71,17 +71,16 @@ class ProjectIndex:
 		
 	[lock]
 	virtual def LocalsAt(fileName as string, code as string, line as int):
-		locals = System.Collections.Generic.List of string()
+		locals = List of string()
 		WithModule(fileName, code) do (module):
-			locals.AddRange(LocalAccumulator(fileName, line).FindIn(module))
+			locals.Extend(LocalAccumulator(fileName, line).FindIn(module))
 		return locals
 		
 	[lock]
 	virtual def ImportsFor(fileName as string, code as string):
 		module = ParseModule(fileName, code)
 		imports = List of string(i.Namespace for i in module.Imports)
-		for ns in _implicitNamespaces:
-			imports.Add(ns)
+		imports.Extend(_implicitNamespaces)
 		return imports
 		
 	[lock]
