@@ -50,7 +50,7 @@ static class CompletionProposer:
 					otherwise:
 						members = InstanceMembersOf(ExpressionType)
 				
-				membersByName = (member for member in members).GroupBy({ member as IEntity | member.Name })
+				membersByName = members.GroupBy({ member | member.Name })
 				for member in membersByName:
 					yield CompletionProposal(Entities.EntityFromList(member.ToList()))
 			otherwise:
