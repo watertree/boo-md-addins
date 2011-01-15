@@ -122,10 +122,6 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 			DispatchService.GuiDispatch(callback)
 		return result
 		
-	virtual def CompleteNamespace(context as CodeCompletionContext):
-		return CompleteNamespacesForPattern(context, IMPORTS_PATTERN, "namespace", \
-		        [MonoDevelop.Projects.Dom.MemberType.Namespace])
-		
 	virtual def CompleteNamespacesForPattern(context as CodeCompletionContext, pattern as Regex, \
 		                                     capture as string, filterMatches as MonoDevelop.Projects.Dom.MemberType*):
 		lineText = GetLineText(context.TriggerLine)
