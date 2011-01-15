@@ -65,7 +65,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		line = context.TriggerLine
 		filename = Document.FileName
 		
-		methods = System.Collections.Generic.List of MethodDescriptor()
+		methods = List of MethodDescriptor()
 		try:
 			methods = _index.MethodsFor(filename, code, methodName, line)
 		except e:
