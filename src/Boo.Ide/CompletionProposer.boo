@@ -11,22 +11,10 @@ import Boo.Lang.PatternMatching
 import System.Linq.Enumerable
 
 class CompletionProposal:
-	_entity as IEntity
-	_name as string
-	_entityType as EntityType
-	_description as string
-	
-	Entity:
-		get: return _entity
-		
-	Name:
-		get: return _name
-		
-	EntityType:
-		get: return _entityType
-		
-	Description:
-		get: return _description
+	[getter(Entity)] _entity as IEntity
+	[getter(Name)] _name as string
+	[getter(EntityType)] _entityType as EntityType
+	[getter(Description)] _description as string
 	
 	def constructor(entity as IEntity):
 		_entity = entity
@@ -35,7 +23,8 @@ class CompletionProposal:
 		ambiguous = entity as Ambiguous
 		if ambiguous is not null:
 			_description = "${ambiguous.Entities[0]} (${ambiguous.Entities.Length} overloads)"
-		else: _description = entity.ToString()
+		else:
+			_description = entity.ToString()
 
 static class CompletionProposer:
 	
