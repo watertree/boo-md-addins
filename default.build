@@ -54,7 +54,7 @@
 			</fileset>
 		</copy>
 	
-		<exec program="nunit-console2" workingdir="${build.dir}">
+		<exec program="nunit-console" workingdir="${build.dir}">
 		
 			<environment>
 				<variable name="MONO_PATH" dir="${md.bin.dir}" />
