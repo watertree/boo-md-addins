@@ -5,17 +5,10 @@ import System
 import Boo.Lang.Compiler.TypeSystem
 
 class MethodDescriptor:
-	_name as string
-	_arguments as string*
-	_returnType as string
+	[getter(Name)] _name as string
+	[getter(Arguments)] _arguments as string*
+	[getter(ReturnType)] _returnType as string
 	
-	Name:
-		get: return _name
-	Arguments:
-		get: return _arguments
-	ReturnType:
-		get: return _returnType
-		
 	def constructor(method as IMethod):
 		_name = method.Name
 		arguments = System.Collections.Generic.List of string()
