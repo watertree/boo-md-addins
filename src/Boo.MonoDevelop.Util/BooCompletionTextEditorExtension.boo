@@ -35,7 +35,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	abstract def ShouldEnableCompletionFor(fileName as string) as bool:
 		pass
 		
-	abstract def GetParameterDataProviderFor(methods as MethodDescriptor*) as IParameterDataProvider:
+	abstract def GetParameterDataProviderFor(methods as List of MethodDescriptor) as IParameterDataProvider:
 		pass
 		
 	abstract SelfReference as string:

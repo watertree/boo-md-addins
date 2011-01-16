@@ -1,7 +1,6 @@
 namespace Boo.MonoDevelop.Completion
 
 import System.Linq
-import System.Collections.Generic
 
 import MonoDevelop.Ide.Gui
 import MonoDevelop.Ide.CodeCompletion

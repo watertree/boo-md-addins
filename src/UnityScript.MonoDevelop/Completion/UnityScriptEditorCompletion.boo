@@ -1,8 +1,6 @@
 namespace UnityScript.MonoDevelop.Completion
 
 import System
-import System.Collections.Generic
-
 import MonoDevelop.Core
 import MonoDevelop.Projects.Dom
 import MonoDevelop.Ide.Gui
@@ -199,5 +197,5 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 	override EndStatement:
 		get: return ";"
 	
-	override def GetParameterDataProviderFor(methods as MethodDescriptor*):
+	override def GetParameterDataProviderFor(methods as List of MethodDescriptor):
 		return UnityScriptParameterDataProvider(Document, methods)

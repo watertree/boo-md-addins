@@ -199,5 +199,5 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 	override EndStatement:
 		get: return string.Empty
 		
-	override def GetParameterDataProviderFor(methods as MethodDescriptor*):
+	override def GetParameterDataProviderFor(methods as List of MethodDescriptor):
 		return BooParameterDataProvider(Document, methods)
