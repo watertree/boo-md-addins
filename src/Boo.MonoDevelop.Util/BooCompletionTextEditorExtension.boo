@@ -57,7 +57,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return ShouldEnableCompletionFor(doc.Name)
 		
 	override def HandleParameterCompletion(context as CodeCompletionContext, completionChar as char):
-		if("(" != completionChar.ToString()):
+		if completionChar == char('('):
 			return null
 			
 		methodName = GetToken(context)
@@ -175,14 +175,13 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		AddGloballyVisibleAndImportedSymbolsTo(completions)
 		work = def():
 			locals = _index.LocalsAt(Document.FileName.FullPath, text, context.TriggerLine-1)
-			if (0 == locals.Count):
+			if len(locals) == 0:
 				callback = def():
 					completions.IsChanging = false
 			else:
 				callback = def():
 					completions.IsChanging = true
-					for local in locals:
-						completions.Add(CompletionData(local, Stock.Field))
+					completions.AddRange(CompletionData(local, Stock.Field) for local in locals)
 					completions.IsChanging = false
 			DispatchService.GuiDispatch(callback)
 		ThreadPool.QueueUserWorkItem (work)
