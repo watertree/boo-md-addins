@@ -19,16 +19,16 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 	static OF_PATTERN = /\bof\s+(?<namespace>[\w\d]+(\.[\w\d]+)*)?\.?/
 	
 	# Patterns that result in us doing a type completion
-	static TYPE_PATTERNS = [OF_PATTERN, AS_PATTERN]
+	static TYPE_PATTERNS = (OF_PATTERN, AS_PATTERN)
 	
 	# Patterns that result in us doing a namespace completion
-	static NAMESPACE_PATTERNS = [IMPORTS_PATTERN]
+	static NAMESPACE_PATTERNS = (IMPORTS_PATTERN,)
 	
 	# Delimiters that indicate a literal
 	static LITERAL_DELIMITERS = ['"', '/']
 	
 	# Scraped from boo.g
-	private static KEYWORDS = [
+	private static KEYWORDS = (
 		"abstract",
 		"and",
 		"as",
@@ -95,10 +95,10 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		// BUILTINS
 		"len",
 		"print"
-	]
+	)
         
   # Scraped from Types.cs
-	private static PRIMITIVES = [
+	private static PRIMITIVES = (
 		"byte",
 		"sbyte",
 		"short",
@@ -113,7 +113,7 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		"void",
 		"string",
 		"object"
-	]
+	)
         
 	override Keywords:
 		get: return KEYWORDS
@@ -163,8 +163,7 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		return null
 				
 	def CompleteNamespacePatterns(context as CodeCompletionContext):
-		types = List[of MemberType]() { MemberType.Namespace, MemberType.Type }
-		
+		types = (MemberType.Namespace, MemberType.Type)
 		for pattern in NAMESPACE_PATTERNS:
 			completions = CompleteNamespacesForPattern(context, pattern, "namespace", types)
 			return completions if completions is not null
@@ -172,7 +171,7 @@ class BooEditorCompletion(BooCompletionTextEditorExtension):
 		return null
 		
 	def CompleteTypePatterns(context as CodeCompletionContext):
-		types = List[of MemberType]() {  MemberType.Namespace, MemberType.Type }
+		types = (MemberType.Namespace, MemberType.Type)
 		
 		for pattern in TYPE_PATTERNS:
 			completions = CompleteNamespacesForPattern(context, pattern, "namespace", types)

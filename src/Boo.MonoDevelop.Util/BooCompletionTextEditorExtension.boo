@@ -39,16 +39,16 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		pass
 		
 	abstract SelfReference as string:
-		get: pass
+		get
 		
 	abstract EndStatement as string:
-		get: pass
+		get
 		
-	abstract Keywords:
-		get: pass
+	abstract Keywords as (string):
+		get
 		
-	abstract Primitives:
-		get: pass
+	abstract Primitives as (string):
+		get
 		
 	def ProjectIndexFor(project as DotNetProject):
 		return ProjectIndexFactory.ForProject(project)

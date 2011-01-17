@@ -20,16 +20,16 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 	static COLON_PATTERN = /\w\s*:\s*(?<namespace>[\w\d]+(\.[\w\d]+)*)?\.?/
 	
 	# Patterns that result in us doing a type completion
-	static TYPE_PATTERNS = [NEW_PATTERN, COLON_PATTERN]
+	static TYPE_PATTERNS = (NEW_PATTERN, COLON_PATTERN)
 	
 	# Patterns that result in us doing a namespace completion
-	static NAMESPACE_PATTERNS = [IMPORTS_PATTERN]
+	static NAMESPACE_PATTERNS = (IMPORTS_PATTERN,)
 	
 	# Delimiters that indicate a literal
 	static LITERAL_DELIMITERS = ['"']
 	
 	# Scraped from UnityScript.g
-	private static KEYWORDS = [
+	private static KEYWORDS = (
 		"as",
 		"break",
 		"catch",
@@ -75,10 +75,10 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 		"switch",
 		"case",
 		"default"
-	]
+	)
 	
 	# Scraped from Types.cs
-	private static PRIMITIVES = [        
+	private static PRIMITIVES = (   
 		"byte",
 		"sbyte",
 		"short",
@@ -93,7 +93,7 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 		"void",
 		"string",
 		"object"
-	]
+	)
 	
 	override Keywords:
 		get: return KEYWORDS
@@ -160,8 +160,7 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 		
 	def CompleteNamespacePatterns(context as CodeCompletionContext):
 		completions as CompletionDataList = null
-		types = List[of MemberType]()
-		types.Add(MemberType.Namespace)
+		types = (MemberType.Namespace,)
 		
 		for pattern in NAMESPACE_PATTERNS:
 			return completions if (null != (completions = CompleteNamespacesForPattern(context, pattern,
@@ -169,7 +168,7 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 		return null
 		
 	def CompleteTypePatterns(context as CodeCompletionContext):
-		types = List[of MemberType]() { MemberType.Namespace, MemberType.Type }
+		types = (MemberType.Namespace, MemberType.Type)
 		
 		completions as CompletionDataList
 		for pattern in TYPE_PATTERNS:
