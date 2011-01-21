@@ -208,7 +208,6 @@ class DomConversionVisitor(DepthFirstVisitor):
 		override def OnReturnStatement(node as ReturnStatement):
 			if node.Expression is null: return
 			_result = Result.Returns
-			Cancel()
 			
 		override def OnYieldStatement(node as YieldStatement):
 			_result = Result.Yields
