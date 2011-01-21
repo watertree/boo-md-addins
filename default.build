@@ -11,7 +11,7 @@
 	<property name="build.dependencies" value="true" />
 	
 	<property name="md.bin.dir" value="/usr/lib/monodevelop/bin" />
-	<property name="md.addins.dir" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/Boo" />
+	<property name="md.addins.dir" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/Boo"  unless="${property::exists('md.addins.dir')}" />
 	<property name="dir.md.addins" value="${environment::get-folder-path('Personal')}/.config/MonoDevelop/addins/UnityScript" />
 
 	<include buildfile="nunit.inc" />	
