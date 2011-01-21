@@ -6,7 +6,7 @@
 	   url		   = "http://boo.codehaus.org/"
 	   description = "Provides support for the Boo programming language."
 	   category	   = "Language bindings"
-	   version	   = "0.9">
+	   version	   = "0.9.4">
 	   
 	<Runtime>
 		<Import assembly="Boo.MonoDevelop.dll" />
