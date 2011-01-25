@@ -28,7 +28,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	
 	override def Initialize():
 		super()
-		_dom = ProjectDomService.GetProjectDom(Document.Project) or ProjectDomService.GetFileDom(Document.FileName)
+		_dom = ProjectDomService.GetProjectDom(Document.Project) or ProjectDomService.GetFileDom(FileName)
 		_project = Document.Project as DotNetProject
 		_index = ProjectIndexFor(_project)
 		
@@ -61,9 +61,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 			return null
 			
 		methodName = GetToken(context)
-		code = "${Editor.GetText(0, context.TriggerOffset)})\n${Editor.GetText(context.TriggerOffset+1, Editor.TextLength)}"
+		code = "${GetText(0, context.TriggerOffset)})\n${GetText(context.TriggerOffset+1, TextLength)}"
 		line = context.TriggerLine
-		filename = Document.FileName
+		filename = FileName
 		
 		try:
 			methods = _index.MethodsFor(filename, code, methodName, line)
@@ -75,7 +75,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		
 	override def CodeCompletionCommand(context as CodeCompletionContext):
 		pos = context.TriggerOffset
-		list = HandleCodeCompletion(context, Editor.GetText(pos-1, pos)[0])
+		list = HandleCodeCompletion(context, GetText(pos-1, pos)[0])
 		if list is not null:
 			return list
 		return CompleteVisible(context)
@@ -108,7 +108,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 	def AddGloballyVisibleAndImportedSymbolsTo(result as BooCompletionDataList):
 		ThreadPool.QueueUserWorkItem() do:
 			namespaces = List of string() { string.Empty }
-			for ns in _index.ImportsFor(Document.FileName, Document.TextEditor.Text):
+			for ns in _index.ImportsFor(FileName, Text):
 				namespaces.AddUnique(ns)
 			callback = def():
 				result.IsChanging = true
@@ -147,15 +147,15 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return result
 		
 	def CompleteMembers(context as CodeCompletionContext):
-		text = string.Format ("{0}{1} {2}", Document.TextEditor.GetText (0, context.TriggerOffset),
+		text = string.Format ("{0}{1} {2}", GetText (0, context.TriggerOffset),
 		                                    Boo.Ide.CursorLocation,
-		                                    Document.TextEditor.GetText (context.TriggerOffset, Document.TextEditor.TextLength))
+		                                    GetText (context.TriggerOffset, TextLength))
 		# print text
 		return CompleteMembersUsing(context, text, null)
 		
 	def CompleteMembersUsing(context as CodeCompletionContext, text as string, result as BooCompletionDataList):
 		if result is null: result = BooCompletionDataList()
-		proposals = _index.ProposalsFor(Document.FileName, text)
+		proposals = _index.ProposalsFor(FileName, text)
 		for proposal in proposals:
 			member = proposal.Entity
 			result.Add(CompletionData(member.Name, IconForEntity(member), proposal.Description))
@@ -165,9 +165,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		completions = BooCompletionDataList(IsChanging: true, AutoSelect: false)
 		completions.AddRange(CompletionData(k, Stock.Literal) for k in Keywords)
 		completions.AddRange(CompletionData(p, Stock.Literal) for p in Primitives)
-		text = string.Format ("{0}{1}.{2}{3} {4}", Document.TextEditor.GetText (0, context.TriggerOffset-1),
+		text = string.Format ("{0}{1}.{2}{3} {4}", GetText (0, context.TriggerOffset-1),
 		                                    SelfReference, Boo.Ide.CursorLocation, EndStatement,
-		                                    Document.TextEditor.GetText (context.TriggerOffset+1, Document.TextEditor.TextLength))
+		                                    GetText (context.TriggerOffset+1, TextLength))
 		
 		# Add members
 		CompleteMembersUsing(context, text, completions)
@@ -175,7 +175,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		# Add globally visible
 		AddGloballyVisibleAndImportedSymbolsTo(completions)
 		work = def():
-			locals = _index.LocalsAt(Document.FileName.FullPath, text, context.TriggerLine-1)
+			locals = _index.LocalsAt(FileName.FullPath, text, context.TriggerLine-1)
 			if len(locals) == 0:
 				callback = def():
 					completions.IsChanging = false
@@ -188,9 +188,6 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		ThreadPool.QueueUserWorkItem (work)
 		
 		return completions
-		
-	def GetLineText(line as int):
-		return Document.TextEditor.GetLineText(line)
 		
 	def StartsIdentifier(line as string, offset as int):
 		startsIdentifier = false
@@ -207,10 +204,28 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return char.IsLetter(c) or "_"[0] == c
 		
 	virtual def IsInsideComment(line as string, offset as int):
-		tag = MonoDevelop.Projects.LanguageBindingService.GetBindingPerFileName(Document.FileName).SingleLineCommentTag
+		tag = MonoDevelop.Projects.LanguageBindingService.GetBindingPerFileName(FileName).SingleLineCommentTag
 		index = line.IndexOf(tag)
 		return 0 <= index and offset >= index
 		
+	protected def GetLineText(line as int):
+		return TextEditor.GetLineText(line)
+		
+	protected def GetText(begin as int, end as int):
+		return TextEditor.GetText(begin, end)
+		
+	protected TextLength:
+		get: return TextEditor.TextLength
+		
+	protected Text:
+		get: return TextEditor.Text
+		
+	protected TextEditor:
+		get: return Document.TextEditor
+		
+	protected FileName:
+		get: return Document.FileName
+
 def IconForEntity(member as IEntity) as MonoDevelop.Core.IconId:
 	match member.EntityType:
 		case EntityType.BuiltinFunction:
@@ -240,3 +255,5 @@ def IconForEntity(member as IEntity) as MonoDevelop.Core.IconId:
 			return IconForEntity(ambiguous.Entities[0])
 		otherwise:
 			return Stock.Literal
+
+	
