@@ -185,14 +185,18 @@
 		<property name="gtk-sharp.dll" value="${md-gtk-sharp.dll}" if="${file::exists(md-gtk-sharp.dll)}" />
 	
 		<echo>${md.bin.dir}</echo>
-		<booc failonerror="true"
+		
+		<booc
+			failonerror="true"
 			output="${build.dir}/Boo.MonoDevelop.dll"
 			target="library"
 			debug="true"
 			rebuild="true">
+			
 			<sources basedir="src/Boo.MonoDevelop">
 				<include name="**/*.boo" />
 			</sources>
+			
 			<references>
 				<include name="System.Core.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
@@ -206,7 +210,6 @@
 				<include name="${build.dir}/Boo.Ide.dll" />
 				<include name="${gdk-sharp.dll}" />
 				<include name="${gtk-sharp.dll}" />
-				
 			</references>
 			
 			<embed basedir="src/Boo.MonoDevelop">
