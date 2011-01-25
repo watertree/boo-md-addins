@@ -12,6 +12,7 @@
 		<Import assembly="UnityScript.MonoDevelop.dll" />
 		<Import assembly="Boo.MonoDevelop.Util.dll" />
 		<Import assembly="Boo.Ide.dll" />
+		<Import assembly="UnityScript.Ide.dll" />
 		<Import assembly="bin/UnityScript.Lang.dll" />
 		<Import assembly="bin/UnityScript.dll" />
 		<Import assembly="bin/Boo.Lang.dll" />
