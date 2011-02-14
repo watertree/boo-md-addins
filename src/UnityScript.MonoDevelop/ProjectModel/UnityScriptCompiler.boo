@@ -4,6 +4,7 @@ import MonoDevelop.Core
 import MonoDevelop.Projects
 
 import System.IO
+import System.Linq.Enumerable
 
 import Boo.Lang.PatternMatching
 
@@ -40,11 +41,24 @@ class UnityScriptCompiler:
 	private def WriteOptionsToResponseFile(responseFileName as string):
 		commandLine = StringWriter()
 		
-		commandLine.WriteLine("-base:System.Object")
-		commandLine.WriteLine("-method:Awake")
+		referencedFiles = GetReferencedFileNames()
+		if ContainsReference(referencedFiles, "UnityEngine.dll"):
+			commandLine.WriteLine("-base:UnityEngine.MonoBehaviour")
+			commandLine.WriteLine("-method:Main")	
+			commandLine.WriteLine("-i:System.Collections")
+			commandLine.WriteLine("-i:UnityEngine")
+			commandLine.WriteLine("-i:UnityEditor") if ContainsReference(referencedFiles, "UnityEditor.dll")
+			commandLine.WriteLine("-t:library")
+		else:
+			commandLine.WriteLine("-base:System.Object")
+			commandLine.WriteLine("-method:Awake")		
+			commandLine.WriteLine("-t:exe")
+		
 		commandLine.WriteLine("-debug+")
-		commandLine.WriteLine("-t:exe")
 		commandLine.WriteLine("-out:${_config.CompiledOutputName}")
+		
+		for r in referencedFiles:
+			commandLine.WriteLine("-reference:'$r'")
 		
 		projectFiles = item as ProjectFile for item in _projectItems if item isa ProjectFile 
 		for file in projectFiles:
@@ -59,6 +73,12 @@ class UnityScriptCompiler:
 		commandLineString = commandLine.ToString()
 		print commandLineString
 		File.WriteAllText(responseFileName, commandLineString)
+		
+	private def GetReferencedFileNames():
+		return _projectItems.OfType[of ProjectReference]().SelectMany({ r | r.GetReferencedFileNames(_selector) }).ToArray()
+		
+	private def ContainsReference(files as (string), fileName as string):
+		return System.Array.Exists(files, { f | Path.GetFileName(f) == fileName })
 		
 	private def MapPath(path as string):
 		return Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), path)
