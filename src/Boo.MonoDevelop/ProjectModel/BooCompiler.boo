@@ -107,7 +107,8 @@ class BooCompiler:
 		startInfo = System.Diagnostics.ProcessStartInfo(executable, commandLine,
 						UseShellExecute: false,
 						RedirectStandardOutput: true,
-						RedirectStandardError: true)
+						RedirectStandardError: true,
+						CreateNoWindow: true)
 		
 		using process = Runtime.SystemAssemblyService.CurrentRuntime.ExecuteAssembly(startInfo, _config.TargetFramework):
 			return process.StandardError.ReadToEnd()
