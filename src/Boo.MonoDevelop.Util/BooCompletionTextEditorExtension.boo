@@ -212,16 +212,16 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension):
 		return TextEditor.GetLineText(line)
 		
 	protected def GetText(begin as int, end as int):
-		return TextEditor.GetText(begin, end)
+		return TextEditor.GetTextBetween (begin, end)
 		
 	protected TextLength:
-		get: return TextEditor.TextLength
+		get: return TextEditor.Length
 		
 	protected Text:
 		get: return TextEditor.Text
 		
 	protected TextEditor:
-		get: return Document.TextEditor
+		get: return Document.Editor
 		
 	protected FileName:
 		get: return Document.FileName

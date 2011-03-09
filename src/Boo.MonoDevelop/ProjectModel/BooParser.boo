@@ -15,7 +15,8 @@ class BooParser(AbstractParser):
 	_compiler = Boo.Lang.Compiler.BooCompiler()
 	
 	def constructor():
-		super("Boo", BooMimeType)
+		# super("Boo", BooMimeType)
+		super()
 		pipeline = CompilerPipeline() { Steps.IntroduceModuleClasses() }
 		_compiler.Parameters.Pipeline = pipeline
 		
