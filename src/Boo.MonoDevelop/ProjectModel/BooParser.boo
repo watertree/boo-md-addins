@@ -24,9 +24,9 @@ class BooParser(AbstractParser):
 		return Path.GetExtension(fileName).ToLower() == ".boo"
 		
 	override def Parse(dom as ProjectDom, fileName as string, content as string):
-		
 		document = ParsedDocument(fileName)
-		document.CompilationUnit = CompilationUnit(fileName)
+		if(null == document.CompilationUnit):
+			document.CompilationUnit = CompilationUnit(fileName)
 		if dom is null: return document
 		
 		try:
