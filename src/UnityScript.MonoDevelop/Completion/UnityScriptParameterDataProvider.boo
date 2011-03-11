@@ -16,7 +16,7 @@ class UnityScriptParameterDataProvider(IParameterDataProvider):
 	OverloadCount:
 		get: return _methods.Count
 
-	def GetCurrentParameterIndex(context as CodeCompletionContext):
+	def GetCurrentParameterIndex(widget as ICompletionWidget, context as CodeCompletionContext):
 		line = _document.Editor.GetLineText(context.TriggerLine)
 		offset = _document.Editor.Caret.Column-2
 		if(0 <= offset and offset < line.Length):
