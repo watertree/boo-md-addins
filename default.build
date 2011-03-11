@@ -152,6 +152,9 @@
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
 			</references>
+			<pkg-references>
+				<package name="gtk-sharp-2.0" />
+			</pkg-references> 
 		</booc>
 	</target>
 	
