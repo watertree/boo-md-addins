@@ -7,7 +7,7 @@ import UnityScript
 static class UnityScriptProjectIndexFactory:
 	
 	final ScriptMainMethod = "Main"
-	final ImplicitImports = ["UnityEngine", "UnityEditor", "System.Collections"]
+	final ImplicitImports = List[of string]() { "UnityEngine", "UnityEditor", "System.Collections" }
 	
 	def CreateUnityScriptProjectIndex() as ProjectIndex:
 		return ProjectIndex(CreateCompiler(), CreateParser(), [])
