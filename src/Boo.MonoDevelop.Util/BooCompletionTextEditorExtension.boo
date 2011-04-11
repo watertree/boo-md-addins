@@ -77,7 +77,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		return ShouldEnableCompletionFor(doc.Name)
 		
 	override def HandleParameterCompletion(context as CodeCompletionContext, completionChar as char):
-		if completionChar == char('('):
+		if completionChar != char('('):
 			return null
 			
 		methodName = GetToken(context)
