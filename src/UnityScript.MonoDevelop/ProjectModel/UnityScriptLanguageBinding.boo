@@ -35,7 +35,7 @@ class UnityScriptLanguageBinding(BooIdeLanguageBinding, IDotNetLanguageBinding):
 		return IsUnityScriptFile(fileName)
 		
 	def GetFileName(baseName as string):
-		return baseName + ".us"
+		return baseName + ".js"
 		
 	def GetCodeDomProvider():
 		return UnityScriptCodeDomProvider()
