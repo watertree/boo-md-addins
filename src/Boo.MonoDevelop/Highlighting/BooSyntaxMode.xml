@@ -607,6 +607,31 @@
 		<Word>WheelFrictionCurve</Word>
 		<Word>WheelHit</Word>
 		<Word>iPhoneAccelerationEvent</Word>
+		<Word>ScreenOrientation</Word>
+		<Word>AnimationCullingType</Word>
+		<Word>AssetBundleCreateRequest</Word>
+		<Word>Color32</Word>
+		<Word>Gyroscope</Word>
+		<Word>MaterialSBS</Word>
+		<Word>NetworkReachability</Word>
+		<Word>ShadowProjection</Word>
+		<Word>SubstancePriority</Word>
+		<Word>AndroidBuildSubtarget</Word>
+		<Word>AssetDeleteResult</Word>
+		<Word>AssetMoveResult</Word>
+		<Word>PackageSBS</Word>
+		<Word>PivotMode</Word>
+		<Word>PivotRotation</Word>
+		<Word>RemoveAssetOptions</Word>
+		<Word>SubstanceImporter</Word>
+		<Word>SubstanceInput</Word>
+		<Word>SubstanceInputType</Word>
+		<Word>SubstanceOutputType</Word>
+		<Word>SubstanceMaterialInformation</Word>
+		<Word>TextureSBS</Word>
+		<Word>TextureUsageMode</Word>
+		<Word>Tool</Word>
+		<Word>ViewTool</Word>
 	</Keywords>
 
 	
