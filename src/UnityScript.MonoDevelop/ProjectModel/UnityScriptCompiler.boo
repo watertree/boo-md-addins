@@ -49,6 +49,8 @@ class UnityScriptCompiler:
 			commandLine.WriteLine("-i:UnityEngine")
 			commandLine.WriteLine("-i:UnityEditor") if ContainsReference(referencedFiles, "UnityEditor.dll")
 			commandLine.WriteLine("-t:library")
+			commandLine.WriteLine("-x-type-inference-rule-attribute:UnityEngineInternal.TypeInferenceRuleAttribute")
+			
 		else:
 			commandLine.WriteLine("-base:System.Object")
 			commandLine.WriteLine("-method:Awake")		
