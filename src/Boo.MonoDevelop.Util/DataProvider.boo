@@ -49,6 +49,9 @@ class DataProvider(DropDownBoxListWindow.IListDataProvider):
 	def GetText(index as int) as string:
 		return GetString (_ambience, _memberList[index])
 		
+	def GetMarkup(index as int) as string:
+		return GetText (index)
+		
 	def GetIcon(index as int) as Gdk.Pixbuf:
 		return ImageService.GetPixbuf(_memberList[index].StockIcon, Gtk.IconSize.Menu)
 		
