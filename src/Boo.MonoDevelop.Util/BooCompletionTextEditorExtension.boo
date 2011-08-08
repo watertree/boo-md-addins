@@ -229,9 +229,16 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		return 0 <= index and offset >= index
 		
 	protected def GetLineText(line as int):
+		line = Math.Max (0, line)
+		line = Math.Min (TextEditor.LineCount-1, line)
 		return TextEditor.GetLineText(line)
 		
 	protected def GetText(begin as int, end as int):
+		end = Math.Min (TextLength-1, end)
+		begin = Math.Max (0, begin)
+		
+		if (not end > begin):
+			return string.Empty
 		return TextEditor.GetTextBetween (begin, end)
 		
 	protected TextLength:
