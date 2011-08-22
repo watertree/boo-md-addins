@@ -211,12 +211,13 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		
 	def StartsIdentifier(line as string, offset as int):
 		startsIdentifier = false
+		return false if (0 >= offset or offset >= line.Length)
+		
 		completionChar = line[offset]
 		
 		if(CanStartIdentifier(completionChar)):
-			if(0 < offset and line.Length > offset):
-				prevChar = line[offset-1]
-				startsIdentifier = not (CanStartIdentifier(prevChar) or "."[0] == prevChar) # There's got to be a better way to do this
+			prevChar = line[offset-1]
+			startsIdentifier = not (CanStartIdentifier(prevChar) or "."[0] == prevChar) # There's got to be a better way to do this
 				
 		return startsIdentifier
 		
