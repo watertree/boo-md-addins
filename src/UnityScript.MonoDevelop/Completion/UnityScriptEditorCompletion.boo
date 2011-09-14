@@ -125,9 +125,10 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 	override def HandleCodeCompletion(context as CodeCompletionContext, completionChar as char, ref triggerWordLength as int):
 		# print "HandleCodeCompletion(${context.ToString()}, '${completionChar.ToString()}')"
 		line = GetLineText(context.TriggerLine)
+		tokenLineOffset = context.TriggerLineOffset-1
 
-		if (IsInsideComment(line, context.TriggerLineOffset-2) or \
-		    IsInsideLiteral(line, context.TriggerLineOffset-2)):
+		if (IsInsideComment(line, tokenLineOffset) or \
+		    IsInsideLiteral(line, tokenLineOffset)):
 			return null
 		
 		match completionChar.ToString():
@@ -145,14 +146,14 @@ class UnityScriptEditorCompletion(BooCompletionTextEditorExtension):
 				return CompleteMembers(context)
 			otherwise:
 				if(CanStartIdentifier(completionChar)):
-					if(StartsIdentifier(line, context.TriggerLineOffset-2)):
+					if(StartsIdentifier(line, tokenLineOffset)):
 						# Necessary for completion window to take first identifier character into account
 						--context.TriggerOffset 
 						triggerWordLength = 1
 						return CompleteVisible(context)
 					else:
-						offset = context.TriggerLineOffset-3
-						if(0 <= offset and line.Length > offset and "."[0] == line[offset]):
+						dotLineOffset = tokenLineOffset-1
+						if(0 <= dotLineOffset and line.Length > dotLineOffset and "."[0] == line[dotLineOffset]):
 							--context.TriggerOffset
 							triggerWordLength = 1
 							return CompleteMembers(context)
