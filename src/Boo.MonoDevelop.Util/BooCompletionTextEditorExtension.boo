@@ -9,6 +9,7 @@ import System.Collections.Generic
 import Boo.Lang.PatternMatching
 import Boo.Lang.Compiler.TypeSystem
 
+import Mono.TextEditor
 import MonoDevelop.Projects
 import MonoDevelop.Projects.Dom
 import MonoDevelop.Projects.Dom.Output
@@ -19,6 +20,7 @@ import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Ide.CodeCompletion
 import MonoDevelop.Core
 import MonoDevelop.Components
+import MonoDevelop.Components.Commands
 
 import Boo.Ide
 import Boo.MonoDevelop.Util
@@ -100,9 +102,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			return list
 		return CompleteVisible(context)
 		
-	def GetToken(context as CodeCompletionContext):
-		line = GetLineText(context.TriggerLine)
-		offset = context.TriggerLineOffset
+	def GetToken(location as DocumentLocation) as string:
+		line = GetLineText(location.Line)
+		offset = location.Column
 		if(3 > offset or line.Length+1 < offset):
 			return line.Trim()
 			
@@ -124,7 +126,10 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		if (start < end):
 			return line[start:end].Trim()
 		return string.Empty
-				
+		
+	def GetToken(context as CodeCompletionContext) as string:
+		return GetToken (DocumentLocation (context.TriggerLine, context.TriggerLineOffset))
+		
 	def AddGloballyVisibleAndImportedSymbolsTo(result as BooCompletionDataList):
 		ThreadPool.QueueUserWorkItem() do:
 			namespaces = Boo.Lang.List of string() { string.Empty }
@@ -325,6 +330,21 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		prev = CurrentPath
 		CurrentPath = result.ToArray()
 		OnPathChanged(DocumentPathChangedEventArgs(prev))
+		
+	[CommandUpdateHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
+	def CanGotoDeclaration (item as CommandInfo):
+		location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		item.Visible = (location != null)
+		item.Bypass = not item.Visible
+		
+	[CommandHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
+	def GotoDeclaration ():
+		location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		if (location is null): return
+			# Console.WriteLine ("No target!")
+		else:
+			# Console.WriteLine ("Jumping to {0}", location.Name)
+			IdeApp.Workbench.OpenDocument (location.File, location.Line, location.Column, OpenDocumentOptions.HighlightCaretLine)
 		
 
 class CustomNode(AbstractNode):
