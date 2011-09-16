@@ -92,6 +92,14 @@ class ProjectIndex:
 		asm = _compiler.Parameters.LoadAssembly(reference, true)
 		_compiler.Parameters.References.Add(asm)
 		
+	[lock]
+	virtual def TargetOf (fileName as string, code as string, line as int, column as int) as TokenLocation:
+		result = null as TokenLocation
+		
+		WithModule(fileName, code) do (module):
+			result = TargetLookup (fileName, line, column).FindIn (module)
+		return result
+		
 	private def WithModule(fname as string, contents as string, action as System.Action[of Module]):
 		input = _compiler.Parameters.Input
 		input.Add(IO.StringInput(fname, contents))
