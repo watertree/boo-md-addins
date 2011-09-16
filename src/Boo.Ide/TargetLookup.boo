@@ -1,6 +1,7 @@
 namespace Boo.Ide
 
 import System
+import System.Reflection
 import System.Collections.Generic
 import Boo.Lang.Compiler.Ast
 import Boo.Lang.PatternMatching
@@ -8,15 +9,29 @@ import Boo.Lang.Compiler.TypeSystem
 
 class TokenLocation:
 	public Name as string
+	public Parent as string
 	public File as string
 	public Line as int
 	public Column as int
+	public MemberInfo as MemberInfo
 	
-	def constructor (name as string, file as string, line as int, column as int):
-		Name = name
-		File = file
-		Line = line
-		Column = column
+	def constructor (entity as MethodInvocationExpression):
+		if (entity.Target.Entity is null):
+			# Console.WriteLine ("Null target for {0}", entity)
+			raise ArgumentException ("Unable to lookup method invocation", "entity")
+		info = GetLexicalInfo (entity.Target.Entity)
+		if (info is null):
+			if not (typeof (ExternalMethod).IsAssignableFrom (entity.Target.Entity.GetType ())):
+				raise ArgumentException ("Unable to lookup method invocation", "entity")
+			MemberInfo = (entity.Target.Entity as ExternalMethod).MemberInfo
+			Name = MemberInfo.Name
+			Parent = MemberInfo.DeclaringType.FullName
+		else:
+			Name = entity.Target.Entity.Name
+			Parent = FullNameToParent (entity.Target.Entity.Name, entity.Target.Entity.FullName)
+			File = info.FullPath
+			Line = info.Line
+			Column = info.Column
 
 class TargetLookup(DepthFirstVisitor):
 	_filename as string
@@ -30,49 +45,23 @@ class TargetLookup(DepthFirstVisitor):
 		_column = column
 		_invocations = List[of MethodInvocationExpression]()
 		
-	static def GetLexicalInfo (node as IEntity):
-		if (node is null):
-			# Console.WriteLine ("null entity!")
-			return null
-		if (typeof(IInternalEntity).IsAssignableFrom (node.GetType ())):
-			return (node as IInternalEntity).Node.LexicalInfo
-		if (typeof(ExternalMethod).IsAssignableFrom (node.GetType ())):
-			# Console.WriteLine ("Dropping external method {0}", node.Name)
-			return null
-		if (typeof(Method).IsAssignableFrom (node.GetType ())):
-			return (node as Method).LexicalInfo
-		else:
-			raise ArgumentException (string.Format ("Invalid node type: {0}", node.GetType ()), "node");
-	
 	[lock]
 	def FindIn(root as Node) as TokenLocation:
 		Visit(root)
-		info = null as LexicalInfo
 		match _invocations.Count:
 			case 0:
 				return null
 			case 1:
-				info = GetLexicalInfo (_invocations[0].Target.Entity)
-				if (info is null): return null
-				# Console.WriteLine ("Found {0}", _invocations[0].Target.Entity.Name)
-				return TokenLocation (_invocations[0].Target.Entity.Name, info.FullPath, info.Line, info.Column)
+				return TokenLocation (_invocations[0])
 			otherwise:
-				def comparer(a as MethodInvocationExpression, z as MethodInvocationExpression):
-					return a.LexicalInfo.Column.CompareTo (z.LexicalInfo.Column)
-				_invocations.Sort (comparer)
+				_invocations.Sort ({ a as MethodInvocationExpression,z as MethodInvocationExpression | a.LexicalInfo.Column.CompareTo (z.LexicalInfo.Column) })
 				method = null as MethodInvocationExpression
 				for i in _invocations:
 					if i.LexicalInfo.Column > _column:
 						if (method is null): return null
-						info = GetLexicalInfo (method.Target.Entity)
-						if (info is null): return null
-						# Console.WriteLine ("Found {0}", method.Target.Entity.Name)
-						return TokenLocation (method.Target.Entity.Name, info.FullPath, info.Line, info.Column)
+						return TokenLocation (method)
 					method = i
-				info = GetLexicalInfo (method.Target.Entity)
-				if (info is null): return null
-				# Console.WriteLine ("Found {0}", method.Target.Entity.Name)
-				return TokenLocation (method.Target.Entity.Name, info.FullPath, info.Line, info.Column)
+				return TokenLocation (method)
 			
 	override def LeaveMethodInvocationExpression (node as MethodInvocationExpression):
 		if node.LexicalInfo is null:
@@ -86,3 +75,24 @@ class TargetLookup(DepthFirstVisitor):
 			return
 		
 		_invocations.Add (node)
+		
+static def GetLexicalInfo (node as IEntity):
+	if (node is null):
+		# Console.WriteLine ("null entity!")
+		return null
+	if (typeof(IInternalEntity).IsAssignableFrom (node.GetType ())):
+		return (node as IInternalEntity).Node.LexicalInfo
+	if (typeof(ExternalMethod).IsAssignableFrom (node.GetType ())):
+		# Console.WriteLine ("Dropping external method {0}", node.Name)
+		return null
+	if (typeof(Method).IsAssignableFrom (node.GetType ())):
+		return (node as Method).LexicalInfo
+	else:
+		raise ArgumentException (string.Format ("Invalid node type: {0}", node.GetType ()), "node");
+		
+static def FullNameToParent (name as string, fullname as string):
+	if (string.IsNullOrEmpty (name)): raise ArgumentException ("Name cannot be empty")
+	if (fullname is null or fullname.Length <= name.Length or not fullname.Contains (name)): return name
+	
+	return fullname.Substring (fullname.LastIndexOf (name))
+	
