@@ -386,7 +386,21 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			imparams = imethod.Parameters
 			
 			if (mbparams.Length != imparams.Count): return false
-			found = range(mbparams.Length).Any({ i | not (mbparams[i].ParameterType.IsGenericParameter or imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName)) })
+			found = range(mbparams.Length).Any () do (i):
+				# Console.WriteLine ("Comparing {0}({2}) to {1}", imparams[i].ReturnType.FullName, mbparams[i].ParameterType.FullName, imparams[i].ReturnType.GetType ())
+				
+				# Check imparams for generic
+				if (typeof(DomReturnType).IsAssignableFrom (imparams[i].ReturnType.GetType ()) and \
+				(imparams[i].ReturnType as DomReturnType).GenericArguments.Count > 0):
+					return false 
+					
+				# Check mbparams for generic
+				if (mbparams[i].ParameterType.IsGenericParameter):
+					return false
+					
+				# Compare names
+				if (imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName)):
+					return false
 			if found:
 				# Console.WriteLine ("Parameter mismatch")
 				return false
