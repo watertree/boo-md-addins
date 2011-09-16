@@ -363,6 +363,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			if (type != null):
 				member = type.Members.FirstOrDefault ({ m | MembersAreEqual (location.MemberInfo, m) })
 				if not (member is null):
+					# Console.WriteLine ("Jumping to {0}", member.FullName)
 					IdeApp.ProjectOperations.JumpToDeclaration (member)
 			# else: Console.WriteLine ("Null type lookup for {0}", declaringType.FullName)
 		else:
@@ -385,7 +386,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			imparams = imethod.Parameters
 			
 			if (mbparams.Length != imparams.Count): return false
-			if range(mbparams.Length).Any({i | not (imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName))}):
+			found = range(mbparams.Length).Any({ i | not (mbparams[i].ParameterType.IsGenericParameter or imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName)) })
+			if found:
 				# Console.WriteLine ("Parameter mismatch")
 				return false
 		return true
