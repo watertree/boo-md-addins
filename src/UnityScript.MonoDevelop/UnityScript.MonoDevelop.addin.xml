@@ -100,7 +100,12 @@
 	</Extension>
 	
 	<Extension path = "/MonoDevelop/ProjectModel/DomParser">
-		<Parser fileExtensions = ".js" id = "UnityScriptParser" class = "UnityScript.MonoDevelop.ProjectModel.UnityScriptParser" />
+		<Parser fileExtensions = ".js;.us" id = "UnityScriptParser" class = "UnityScript.MonoDevelop.ProjectModel.UnityScriptParser" />
 	</Extension>
 	
+	<Extension path="/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+		<Condition id="FileType" fileExtensions=".js;.us">
+			<CommandItem id = "MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration" insertafter="MonoDevelop.SourceEditor.SourceEditorCommands.MarkerOperations" />
+		</Condition>
+	</Extension>
 </Addin>
