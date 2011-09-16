@@ -114,4 +114,9 @@
 		</Condition>
 	</Extension>  
 	
+	<Extension path="/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+		<Condition id="FileType" fileExtensions=".boo">
+			<CommandItem id = "MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration" insertafter="MonoDevelop.SourceEditor.SourceEditorCommands.MarkerOperations" />
+		</Condition>
+	</Extension>
 </Addin>
