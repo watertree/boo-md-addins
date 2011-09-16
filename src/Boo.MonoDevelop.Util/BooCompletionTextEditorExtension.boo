@@ -1,8 +1,10 @@
 namespace Boo.MonoDevelop.Util.Completion
 
 import System
+import System.Linq
 import System.Linq.Enumerable
 import System.Threading
+import System.Reflection
 import System.Text.RegularExpressions
 import System.Collections.Generic
 
@@ -333,18 +335,60 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		
 	[CommandUpdateHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
 	def CanGotoDeclaration (item as CommandInfo):
-		location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		location = null as TokenLocation
+		try:
+			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		except e as ArgumentException:
+			pass
+			# LoggingService.LogError ("Error looking up target", e)
 		item.Visible = (location != null)
 		item.Bypass = not item.Visible
 		
 	[CommandHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
 	def GotoDeclaration ():
-		location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
-		if (location is null): return
+		location = null as TokenLocation
+		try:
+			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		except e as ArgumentException:
+			LoggingService.LogError ("Error looking up target", e)
+		if (location is null):
 			# Console.WriteLine ("No target!")
+			return
+		elif (location.MemberInfo != null):
+			# Console.WriteLine ("Attempting to lookup member info {0}", location.MemberInfo.Name)
+			declaringType = location.MemberInfo.DeclaringType
+			if (declaringType.IsGenericType):
+				declaringType = declaringType.GetGenericTypeDefinition ()
+			type = _dom.GetType (declaringType.FullName, 0, true, true) as MonoDevelop.Projects.Dom.IType
+			if (type != null):
+				member = type.Members.FirstOrDefault ({ m | MembersAreEqual (location.MemberInfo, m) })
+				if not (member is null):
+					IdeApp.ProjectOperations.JumpToDeclaration (member)
+			# else: Console.WriteLine ("Null type lookup for {0}", declaringType.FullName)
 		else:
 			# Console.WriteLine ("Jumping to {0}", location.Name)
 			IdeApp.Workbench.OpenDocument (location.File, location.Line, location.Column, OpenDocumentOptions.HighlightCaretLine)
+			
+	static def MembersAreEqual(memberInfo as MemberInfo, imember as MonoDevelop.Projects.Dom.IMember):
+		# Console.WriteLine ("Checking {0}", imember.FullName)
+		if not (memberInfo.Name.Equals (imember.Name, StringComparison.Ordinal)):
+			# Console.WriteLine ("{0} != {1}", memberInfo.Name, imember.Name)
+			return false
+		
+		if (typeof(MethodBase).IsAssignableFrom (memberInfo.GetType())):
+			if not (typeof(MonoDevelop.Projects.Dom.IMethod).IsAssignableFrom (imember.GetType ())):
+				# Console.WriteLine ("IMember is not IMethod")
+				return false
+			methodbase = memberInfo as MethodBase
+			imethod = imember as MonoDevelop.Projects.Dom.IMethod
+			mbparams = methodbase.GetParameters()
+			imparams = imethod.Parameters
+			
+			if (mbparams.Length != imparams.Count): return false
+			if range(mbparams.Length).Any({i | not (imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName))}):
+				# Console.WriteLine ("Parameter mismatch")
+				return false
+		return true
 		
 
 class CustomNode(AbstractNode):
