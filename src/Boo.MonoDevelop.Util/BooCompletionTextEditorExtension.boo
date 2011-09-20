@@ -366,6 +366,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 					# Console.WriteLine ("Jumping to {0}", member.FullName)
 					IdeApp.ProjectOperations.JumpToDeclaration (member)
 			# else: Console.WriteLine ("Null type lookup for {0}", declaringType.FullName)
+		elif (location.TypeName != null):
+			# Console.WriteLine ("Jumping to {0}", location.TypeName)
+			IdeApp.ProjectOperations.JumpToDeclaration (_dom.GetType (location.TypeName, 0, true, true) as MonoDevelop.Projects.Dom.IType)
 		else:
 			# Console.WriteLine ("Jumping to {0}", location.Name)
 			IdeApp.Workbench.OpenDocument (location.File, location.Line, location.Column, OpenDocumentOptions.HighlightCaretLine)
@@ -376,8 +379,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			# Console.WriteLine ("{0} != {1}", memberInfo.Name, imember.Name)
 			return false
 		
-		if (typeof(MethodBase).IsAssignableFrom (memberInfo.GetType())):
-			if not (typeof(MonoDevelop.Projects.Dom.IMethod).IsAssignableFrom (imember.GetType ())):
+		if (memberInfo isa MethodBase):
+			if not imember isa MonoDevelop.Projects.Dom.IMethod:
 				# Console.WriteLine ("IMember is not IMethod")
 				return false
 			methodbase = memberInfo as MethodBase
@@ -390,7 +393,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 				# Console.WriteLine ("Comparing {0}({2}) to {1}", imparams[i].ReturnType.FullName, mbparams[i].ParameterType.FullName, imparams[i].ReturnType.GetType ())
 				
 				# Check imparams for generic
-				if (typeof(DomReturnType).IsAssignableFrom (imparams[i].ReturnType.GetType ()) and \
+				if (imparams[i].ReturnType isa DomReturnType and \
 				(imparams[i].ReturnType as DomReturnType).GenericArguments.Count > 0):
 					return false 
 					
