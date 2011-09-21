@@ -1,5 +1,6 @@
 namespace Boo.Ide.Tests
 
+import System
 import Boo.Lang.Environments
 
 import Boo.Lang.Compiler
@@ -14,5 +15,25 @@ import Boo.Ide
 class TargetLookupTest:
 	
 	[Test]
-	def LookupExternalType ():
-		pass
+	def LookupLocalMethod ():
+		index = ProjectIndex()
+		file = "/foo.boo"
+		expectedLine = 9
+		expectedColumn = 9
+		code = ReIndent("""
+class Foo:
+	def blah():
+		System.Console.WriteLine("foo")
+		System.Console.WriteLine("bar")
+		System.Console.WriteLine("baz")
+		bleh()
+		
+	def bleh():
+		System.Console.WriteLine("bleh")
+""")
+		location = index.TargetOf (file, code, 7, 4)
+		
+		Assert.IsNotNull (location)
+		Assert.AreEqual (file, location.File)
+		Assert.AreEqual (expectedLine, location.Line)
+		Assert.AreEqual (expectedColumn, location.Column)
