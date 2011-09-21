@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{B3672514-7503-4B01-B4B4-B44E87061EA2}") = "Boo.MonoDevelop", "Boo.MonoDevelop.booproj", "{A154F6EB-6808-4816-B9C1-C5412663E0F1}"
 EndProject
 Project("{B3672514-7503-4B01-B4B4-B44E87061EA2}") = "Boo.MonoDevelop.Tests", "..\Boo.MonoDevelop.Tests\Boo.MonoDevelop.Tests.booproj", "{DA18FECD-4F5B-4A02-B36B-876838F6B7A3}"
