@@ -15,12 +15,6 @@ static class ProjectIndexFactory:
 			return indices[project]
 		
 		index = CreateIndexFor(project)
-		for reference in project.References:
-			try:
-				index.AddReference(reference.Reference)
-			except x:
-				LogError x
-				
 		indices[project] = index
 		return index
 		
@@ -28,6 +22,9 @@ static class ProjectIndexFactory:
 		booLanguageBinding = project.LanguageBinding as IBooIdeLanguageBinding 
 		if booLanguageBinding is not null:
 			return booLanguageBinding.ProjectIndexFor(project)
+			
+		# This should never happen now that Unity is generating proper projects
+		MonoDevelop.Core.LoggingService.LogWarning ("Unknown project type {0}!", project.LanguageBinding)
 		return MixedProjectIndex(project, ProjectIndex(), UnityScriptProjectIndexFactory.CreateUnityScriptProjectIndex())
 			
 def LogError(x):
