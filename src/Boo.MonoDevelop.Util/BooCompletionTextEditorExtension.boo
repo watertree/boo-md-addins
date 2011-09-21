@@ -375,7 +375,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			
 	static def MembersAreEqual(memberInfo as MemberInfo, imember as MonoDevelop.Projects.Dom.IMember):
 		# Console.WriteLine ("Checking {0}", imember.FullName)
-		if not (memberInfo.Name.Equals (imember.Name, StringComparison.Ordinal)):
+		if not (memberInfo.Name.Equals (imember.Name, StringComparison.Ordinal) or \
+		(memberInfo.Name.Equals (".ctor", StringComparison.Ordinal) and imember.Name.Equals ("constructor", StringComparison.Ordinal))):
 			# Console.WriteLine ("{0} != {1}", memberInfo.Name, imember.Name)
 			return false
 		
