@@ -75,8 +75,33 @@ class Bar:
 		System.Console.WriteLine("bleh")
 """)
 
-		location = index.TargetOf (file, code, 6, 10)
-		Console.WriteLine (location)
+		location = index.TargetOf (file, code, 6, 20)
 		
 		Assert.IsNotNull (location)
 		Assert.AreEqual (expectedTypeName, location.TypeName)
+		
+	[Test]
+	def LookupExternalMethod ():
+		index = ProjectIndex()
+		file = "/foo.boo"
+		expectedName = "Add"
+		expectedTypeFullName = "Boo.Lang.List"
+		code = ReIndent("""
+class Foo:
+	def blah():
+		list = List[of string]()
+		list.Add("foo")
+		list.Add("bar")
+		list.Add("baz")
+		
+class Bar:
+	static def bleh():
+		System.Console.WriteLine("bleh")
+""")
+
+		location = index.TargetOf (file, code, 6, 20)
+		
+		Assert.IsNotNull (location)
+		Assert.IsNotNull (location.MemberInfo)
+		Assert.AreEqual (expectedName, location.MemberInfo.Name)
+		Assert.IsTrue (location.MemberInfo.DeclaringType.FullName.StartsWith (expectedTypeFullName))
