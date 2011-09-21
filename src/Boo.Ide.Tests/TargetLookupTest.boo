@@ -57,3 +57,26 @@ class Bar:
 		
 		Assert.IsNotNull (location)
 		Assert.AreEqual (expectedTypeName, location.TypeName)
+		
+	[Test]
+	def LookupExternalType ():
+		index = ProjectIndex()
+		file = "/foo.boo"
+		expectedTypeName = "System.Reflection.Assembly"
+		code = ReIndent("""
+import System.Reflection
+
+class Foo:
+	def blah():
+		bar = null as Assembly
+		
+class Bar:
+	static def bleh():
+		System.Console.WriteLine("bleh")
+""")
+
+		location = index.TargetOf (file, code, 6, 10)
+		Console.WriteLine (location)
+		
+		Assert.IsNotNull (location)
+		Assert.AreEqual (expectedTypeName, location.TypeName)
