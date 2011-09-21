@@ -28,6 +28,9 @@ class CompilationUnitDataProvider(DropDownBoxListWindow.IListDataProvider):
 	def GetText(position as int) as string:
 		return (WorkaroundElementAt(_document.ParsedDocument.UserRegions, position) as FoldingRegion).Name
 		
+	def GetMarkup(position as int) as string:
+		return GetText (position)
+		
 	def GetIcon(position as int) as Gdk.Pixbuf:
 		return Pixbuf
 		
