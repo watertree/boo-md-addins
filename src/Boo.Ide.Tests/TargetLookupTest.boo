@@ -37,3 +37,23 @@ class Foo:
 		Assert.AreEqual (file, location.File)
 		Assert.AreEqual (expectedLine, location.Line)
 		Assert.AreEqual (expectedColumn, location.Column)
+		
+	[Test]
+	def LookupLocalType ():
+		index = ProjectIndex()
+		file = "/foo.boo"
+		expectedTypeName = "Bar"
+		code = ReIndent("""
+class Foo:
+	def blah():
+		bar = null as Bar
+		
+class Bar:
+	static def bleh():
+		System.Console.WriteLine("bleh")
+""")
+
+		location = index.TargetOf (file, code, 4, 24)
+		
+		Assert.IsNotNull (location)
+		Assert.AreEqual (expectedTypeName, location.TypeName)
