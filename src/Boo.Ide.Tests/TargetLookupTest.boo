@@ -1,11 +1,6 @@
 namespace Boo.Ide.Tests
 
 import System
-import Boo.Lang.Environments
-
-import Boo.Lang.Compiler
-import Boo.Lang.Compiler.Ast
-import Boo.Lang.Compiler.Steps
 
 import NUnit.Framework
 
