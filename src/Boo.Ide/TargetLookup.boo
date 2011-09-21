@@ -51,6 +51,9 @@ class TokenLocation:
 			Column = info.Column
 		return true
 		
+	override def ToString () as string:
+		return string.Format ("{0}:{1},{2} ({3} | {4})", File, Line, Column, MemberInfo, TypeName)
+		
 
 class TargetLookup(DepthFirstVisitor):
 	_filename as string
