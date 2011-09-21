@@ -1,14 +1,17 @@
 namespace Boo.MonoDevelop.Util.Completion
 
 import System
+import System.Linq
 import System.Linq.Enumerable
 import System.Threading
+import System.Reflection
 import System.Text.RegularExpressions
 import System.Collections.Generic
 
 import Boo.Lang.PatternMatching
 import Boo.Lang.Compiler.TypeSystem
 
+import Mono.TextEditor
 import MonoDevelop.Projects
 import MonoDevelop.Projects.Dom
 import MonoDevelop.Projects.Dom.Output
@@ -19,6 +22,7 @@ import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Ide.CodeCompletion
 import MonoDevelop.Core
 import MonoDevelop.Components
+import MonoDevelop.Components.Commands
 
 import Boo.Ide
 import Boo.MonoDevelop.Util
@@ -100,9 +104,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			return list
 		return CompleteVisible(context)
 		
-	def GetToken(context as CodeCompletionContext):
-		line = GetLineText(context.TriggerLine)
-		offset = context.TriggerLineOffset
+	def GetToken(location as DocumentLocation) as string:
+		line = GetLineText(location.Line)
+		offset = location.Column
 		if(3 > offset or line.Length+1 < offset):
 			return line.Trim()
 			
@@ -124,7 +128,10 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		if (start < end):
 			return line[start:end].Trim()
 		return string.Empty
-				
+		
+	def GetToken(context as CodeCompletionContext) as string:
+		return GetToken (DocumentLocation (context.TriggerLine, context.TriggerLineOffset))
+		
 	def AddGloballyVisibleAndImportedSymbolsTo(result as BooCompletionDataList):
 		ThreadPool.QueueUserWorkItem() do:
 			namespaces = Boo.Lang.List of string() { string.Empty }
@@ -325,6 +332,82 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		prev = CurrentPath
 		CurrentPath = result.ToArray()
 		OnPathChanged(DocumentPathChangedEventArgs(prev))
+		
+	[CommandUpdateHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
+	def CanGotoDeclaration (item as CommandInfo):
+		location = null as TokenLocation
+		try:
+			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		except e as ArgumentException:
+			pass
+			# LoggingService.LogError ("Error looking up target", e)
+		item.Visible = (location != null)
+		item.Bypass = not item.Visible
+		
+	[CommandHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
+	def GotoDeclaration ():
+		location = null as TokenLocation
+		try:
+			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+		except e as ArgumentException:
+			LoggingService.LogError ("Error looking up target", e)
+		if (location is null):
+			# Console.WriteLine ("No target!")
+			return
+		elif (location.MemberInfo != null):
+			# Console.WriteLine ("Attempting to lookup member info {0}", location.MemberInfo.Name)
+			declaringType = location.MemberInfo.DeclaringType
+			if (declaringType.IsGenericType):
+				declaringType = declaringType.GetGenericTypeDefinition ()
+			type = _dom.GetType (declaringType.FullName, 0, true, true) as MonoDevelop.Projects.Dom.IType
+			if (type != null):
+				member = type.Members.FirstOrDefault ({ m | MembersAreEqual (location.MemberInfo, m) })
+				if not (member is null):
+					# Console.WriteLine ("Jumping to {0}", member.FullName)
+					IdeApp.ProjectOperations.JumpToDeclaration (member)
+			# else: Console.WriteLine ("Null type lookup for {0}", declaringType.FullName)
+		elif (location.TypeName != null):
+			# Console.WriteLine ("Jumping to {0}", location.TypeName)
+			IdeApp.ProjectOperations.JumpToDeclaration (_dom.GetType (location.TypeName, 0, true, true) as MonoDevelop.Projects.Dom.IType)
+		else:
+			# Console.WriteLine ("Jumping to {0}", location.Name)
+			IdeApp.Workbench.OpenDocument (location.File, location.Line, location.Column, OpenDocumentOptions.HighlightCaretLine)
+			
+	static def MembersAreEqual(memberInfo as MemberInfo, imember as MonoDevelop.Projects.Dom.IMember):
+		# Console.WriteLine ("Checking {0}", imember.FullName)
+		if not (memberInfo.Name.Equals (imember.Name, StringComparison.Ordinal)):
+			# Console.WriteLine ("{0} != {1}", memberInfo.Name, imember.Name)
+			return false
+		
+		if (memberInfo isa MethodBase):
+			if not imember isa MonoDevelop.Projects.Dom.IMethod:
+				# Console.WriteLine ("IMember is not IMethod")
+				return false
+			methodbase = memberInfo as MethodBase
+			imethod = imember as MonoDevelop.Projects.Dom.IMethod
+			mbparams = methodbase.GetParameters()
+			imparams = imethod.Parameters
+			
+			if (mbparams.Length != imparams.Count): return false
+			found = range(mbparams.Length).Any () do (i):
+				# Console.WriteLine ("Comparing {0}({2}) to {1}", imparams[i].ReturnType.FullName, mbparams[i].ParameterType.FullName, imparams[i].ReturnType.GetType ())
+				
+				# Check imparams for generic
+				if (imparams[i].ReturnType isa DomReturnType and \
+				(imparams[i].ReturnType as DomReturnType).GenericArguments.Count > 0):
+					return false 
+					
+				# Check mbparams for generic
+				if (mbparams[i].ParameterType.IsGenericParameter):
+					return false
+					
+				# Compare names
+				if (imparams[i].ReturnType.FullName.Equals (mbparams[i].ParameterType.FullName)):
+					return false
+			if found:
+				# Console.WriteLine ("Parameter mismatch")
+				return false
+		return true
 		
 
 class CustomNode(AbstractNode):

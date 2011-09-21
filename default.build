@@ -153,6 +153,10 @@
 				<include name="${build.dir}/UnityScript.Ide.dll" />
 				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
+				<include name="${md.bin.dir}/ICSharpCode.NRefactory.dll" />
+				<include name="${md.bin.dir}/../AddIns/MonoDevelop.SourceEditor2.dll" />
+				<include name="${md.bin.dir}/../AddIns/MonoDevelop.DesignerSupport/MonoDevelop.DesignerSupport.dll" />
+				<include name="${md.bin.dir}/../AddIns/MonoDevelop.Refactoring/MonoDevelop.Refactoring.dll" />
 				<include name="${dir.gtk}/gtk-sharp.dll" if="${platform::is-win32()}" />
 				<include name="${dir.gtk}/gdk-sharp.dll" if="${platform::is-win32()}" />
 			</references>
