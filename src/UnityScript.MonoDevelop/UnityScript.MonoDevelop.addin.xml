@@ -100,7 +100,8 @@
 	</Extension>
 	
 	<Extension path = "/MonoDevelop/ProjectModel/DomParser">
-		<Parser fileExtensions = ".js;.us" id = "UnityScriptParser" class = "UnityScript.MonoDevelop.ProjectModel.UnityScriptParser" />
+		<Parser fileExtensions = ".js" id = "UnityScriptParserJS" class = "UnityScript.MonoDevelop.ProjectModel.UnityScriptParser" />
+		<Parser fileExtensions = ".us" id = "UnityScriptParserUS" class = "UnityScript.MonoDevelop.ProjectModel.UnityScriptParser" />
 	</Extension>
 	
 	<Extension path="/MonoDevelop/SourceEditor2/ContextMenu/Editor">
