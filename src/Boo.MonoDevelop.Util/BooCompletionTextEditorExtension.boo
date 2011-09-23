@@ -346,14 +346,23 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			if not string.IsNullOrEmpty (location.TypeName):
 				return location.TypeName
 			if location.MemberInfo != null:
-				return location.MemberInfo.Name
+				match location.MemberInfo.Name:
+					case /.c[c]?tor/:
+						return location.MemberInfo.DeclaringType.Name
+					otherwise:
+						return location.MemberInfo.Name
 		return null
+		
+	private def GetLocation ():
+		line = GetLineText (Editor.Caret.Line)
+		column = Editor.Caret.Column + (line.Where({ c | c == "\t"[0] }).Count() * 3)
+		return _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, column)
 		
 	[CommandUpdateHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
 	def CanGotoDeclaration (item as CommandInfo):
 		location = null as TokenLocation
 		try:
-			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+			location = GetLocation ()
 		except e as ArgumentException:
 			pass
 			# LoggingService.LogError ("Error looking up target", e)
@@ -369,7 +378,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 	def GotoDeclaration ():
 		location = null as TokenLocation
 		try:
-			location = _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, Editor.Caret.Column)
+			location = GetLocation ()
 			# Console.WriteLine (location)
 		except e as ArgumentException:
 			LoggingService.LogError ("Error looking up target", e)
