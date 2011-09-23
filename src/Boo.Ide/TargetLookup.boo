@@ -18,9 +18,16 @@ class TokenLocation:
 	public TypeName as string
 	
 	def constructor (node as Node):
-		if not Init (node as MethodInvocationExpression):
-			if not Init (node as TypeReference):
-				raise ArgumentException (string.Format ("Unable to create TargetLocation from {0}", node.GetType ()))
+		initialized = false
+		if node isa MethodInvocationExpression:
+			initialized = Init (node as MethodInvocationExpression)
+		elif node isa TypeReference:
+			initialized = Init (node as TypeReference)
+		elif node isa MemberReferenceExpression:
+			initialized = Init (node as MemberReferenceExpression)
+				
+		if not initialized:
+			raise ArgumentException (string.Format ("Unable to create TargetLocation from {0}", node.GetType ()))
 			
 	private def Init (reference as TypeReference) as bool:
 		return false if reference is null
@@ -32,24 +39,32 @@ class TokenLocation:
 		return true
 		
 	private def Init (invocation as MethodInvocationExpression) as bool:
-		return false if (invocation is null or invocation.Target.Entity is null)
+		return false if (invocation is null or invocation.Target is null or invocation.Target.Entity is null)
+		ReadEntity (invocation.Target.Entity)
+		return true
 		
-		info = GetLexicalInfo (invocation.Target.Entity)
+	private def Init (reference as MemberReferenceExpression):
+		return false if (reference is null or reference.Entity is null)
+		# Console.WriteLine (reference.Entity)
+		ReadEntity (reference.Entity)
+		return true
+		
+	private def ReadEntity(entity as IEntity):
+		info = GetLexicalInfo (entity)
 		if (info is null):
-			# ExternalMethod, populate MemberInfo
-			if not (invocation.Target.Entity isa ExternalMethod):
-				raise ArgumentException ("Unable to lookup method invocation", "invocation")
-			MemberInfo = (invocation.Target.Entity as ExternalMethod).MemberInfo
+			# ExternalEntity, populate MemberInfo
+			if not (entity isa IExternalEntity):
+				raise ArgumentException ("Unable to lookup entity", "entity")
+			MemberInfo = (entity as IExternalEntity).MemberInfo
 			Name = MemberInfo.Name
 			Parent = MemberInfo.DeclaringType.FullName
 		else:
-			# Normal method with lexical info
-			Name = invocation.Target.Entity.Name
-			Parent = FullNameToParent (invocation.Target.Entity.Name, invocation.Target.Entity.FullName)
+			# Normal member with lexical info
+			Name = entity.Name
+			Parent = FullNameToParent (entity.Name, entity.FullName)
 			File = info.FullPath
 			Line = info.Line
 			Column = info.Column
-		return true
 		
 	override def ToString () as string:
 		return string.Format ("{0}:{1},{2} ({3} | {4})", File, Line, Column, MemberInfo, TypeName)
@@ -71,7 +86,6 @@ class TargetLookup(DepthFirstVisitor):
 	def FindIn(root as Node) as TokenLocation:
 		Visit(root)
 		
-		
 		match _nodes.Count:
 			case 0:
 				return null
@@ -79,13 +93,17 @@ class TargetLookup(DepthFirstVisitor):
 				return TokenLocation (_nodes[0])
 			otherwise:
 				_nodes.Sort ({ a as Node,z as Node | a.LexicalInfo.Column.CompareTo (z.LexicalInfo.Column) })
+				# for node in _nodes:
+				# 	Console.WriteLine ("Checking {0}({1}) against {2}", node, node.LexicalInfo, _column)
 				node = _nodes.LastOrDefault ({ n | n.LexicalInfo.Column <= _column })
 					
 				return null if (node is null)
+				# Console.WriteLine ("Using {0} ({1})", node.Entity, node.GetType())
 				return TokenLocation (node)
 				
 			
 	override def LeaveMethodInvocationExpression (node as MethodInvocationExpression):
+		# Console.WriteLine ("Checking {0}", node)
 		return if not LocationMatches (node)
 		_nodes.Add (node)
 		
@@ -93,6 +111,11 @@ class TargetLookup(DepthFirstVisitor):
 		return if not LocationMatches (node)
 		_nodes.Add (node)
 		# Console.WriteLine ("Adding type reference {0}", node.Name)
+		
+	override def LeaveMemberReferenceExpression (node as MemberReferenceExpression):
+		return if not LocationMatches (node)
+		_nodes.Add (node)
+		# Console.WriteLine ("MemberReference: {0} ({1} {2})", node, node.GetType (), node.Entity.GetType ())
 		
 	private def LocationMatches (node as Node):
 		if node.LexicalInfo is null:
@@ -111,8 +134,10 @@ static def GetLexicalInfo (node as IEntity):
 		# Console.WriteLine ("null entity!")
 		return null
 	if (node isa IInternalEntity):
-		return (node as IInternalEntity).Node.LexicalInfo
-	if (node isa ExternalMethod):
+		internalEntity = node as IInternalEntity
+		return null if internalEntity.Node is null
+		return internalEntity.Node.LexicalInfo
+	if (node isa IExternalEntity):
 		# Console.WriteLine ("Dropping external method {0}", node.Name)
 		return null
 	if (node isa Method):
