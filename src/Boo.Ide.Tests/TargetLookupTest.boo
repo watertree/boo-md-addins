@@ -28,10 +28,10 @@ class Foo:
 """)
 		location = index.TargetOf (file, code, 7, 10)
 		
-		Assert.IsNotNull (location)
-		Assert.AreEqual (file, location.File)
-		Assert.AreEqual (expectedLine, location.Line)
-		Assert.AreEqual (expectedColumn, location.Column)
+		Assert.IsNotNull (location, "Method lookup failed")
+		Assert.AreEqual (file, location.File, "Filename mismatch")
+		Assert.AreEqual (expectedLine, location.Line, "Line mismatch")
+		Assert.AreEqual (expectedColumn, location.Column, "Column mismatch")
 		
 	[Test]
 	def LookupLocalType ():
@@ -50,8 +50,8 @@ class Bar:
 
 		location = index.TargetOf (file, code, 4, 24)
 		
-		Assert.IsNotNull (location)
-		Assert.AreEqual (expectedTypeName, location.TypeName)
+		Assert.IsNotNull (location, "Type lookup failed")
+		Assert.AreEqual (expectedTypeName, location.TypeName, "Type mismatch")
 	
 	[Test]
 	def LookupLocalProperty ():
@@ -96,8 +96,8 @@ class Bar:
 
 		location = index.TargetOf (file, code, 6, 20)
 		
-		Assert.IsNotNull (location)
-		Assert.AreEqual (expectedTypeName, location.TypeName)
+		Assert.IsNotNull (location, "Type lookup failed")
+		Assert.AreEqual (expectedTypeName, location.TypeName, "Type mismatch")
 		
 	[Test]
 	def LookupExternalMethod ():
@@ -120,10 +120,10 @@ class Bar:
 
 		location = index.TargetOf (file, code, 6, 20)
 		
-		Assert.IsNotNull (location)
-		Assert.IsNotNull (location.MemberInfo)
-		Assert.AreEqual (expectedName, location.MemberInfo.Name)
-		Assert.IsTrue (location.MemberInfo.DeclaringType.FullName.StartsWith (expectedTypeFullName))
+		Assert.IsNotNull (location, "Method lookup failed")
+		Assert.IsNotNull (location.MemberInfo, "External method lookup didn't return external reference")
+		Assert.AreEqual (expectedName, location.MemberInfo.Name, "Method name mismatch")
+		Assert.IsTrue (location.MemberInfo.DeclaringType.FullName.StartsWith (expectedTypeFullName), "Method declaring type mismatch")
 		
 	[Test]
 	def LookupExternalProperty ():
