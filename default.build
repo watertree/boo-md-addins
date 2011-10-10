@@ -151,7 +151,8 @@
 				<include name="${boo.build.dir}/Boo.Lang.Parser.dll" />
 				<include name="${build.dir}/Boo.Ide.dll" />
 				<include name="${build.dir}/UnityScript.Ide.dll" />
-				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Ide.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
 				<include name="${md.bin.dir}/ICSharpCode.NRefactory.dll" />
 				<include name="${md.bin.dir}/../AddIns/MonoDevelop.SourceEditor2.dll" />
@@ -210,7 +211,8 @@
 			
 			<references>
 				<include name="System.Core.dll" />
-				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Ide.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
 				<include name="${md.bin.dir}/NRefactory.dll" />
 				<include name="${md.bin.dir}/../AddIns/MonoDevelop.Refactoring/MonoDevelop.Refactoring.dll" />
@@ -276,7 +278,8 @@
 				<include name="System.Core.dll" />
 				<include name="${unityscript.build.dir}/UnityScript.dll" />
 				<include name="${md.bin.dir}/Mono.TextEditor.dll" />
-				<include name="${md.bin.dir}/MonoDevelop.*.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Core.dll" />
+				<include name="${md.bin.dir}/MonoDevelop.Ide.dll" />
 				<include name="${md.bin.dir}/../AddIns/MonoDevelop.SourceEditor2.dll" />
 				<include name="${md.bin.dir}/Mono.Debugging.dll" />
 				<include name="${md.bin.dir}/../AddIns/MonoDevelop.Debugger/MonoDevelop.Debugger.dll" />
