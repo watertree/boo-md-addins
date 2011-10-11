@@ -355,7 +355,15 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		
 	private def GetLocation ():
 		line = GetLineText (Editor.Caret.Line)
-		column = Editor.Caret.Column + (line.Where({ c | c == "\t"[0] }).Count() * 3)
+		column = Editor.Caret.Column 
+		
+		# Account for tab width in boo parser
+		# This will be removed later
+		tabwidth = 7
+		if (Document.FileName.Extension == ".boo"):
+			tabwidth = 3
+		column += (line.Where({ c | c == "\t"[0] }).Count() * tabwidth)
+		
 		return _index.TargetOf (Document.FileName.FullPath, Editor.Text, Editor.Caret.Line, column)
 		
 	[CommandUpdateHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
