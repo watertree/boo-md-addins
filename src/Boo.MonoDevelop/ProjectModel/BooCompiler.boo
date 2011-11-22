@@ -33,7 +33,7 @@ class BooCompiler:
 		responseFileName = Path.GetTempFileName()
 		try:
 			WriteOptionsToResponseFile(responseFileName)
-			compilerOutput = ExecuteProcess(BoocPath(), "@${responseFileName}")
+			compilerOutput = ExecuteProcess(BoocPath(), "\"@${responseFileName}\"")
 			buildResult = ParseBuildResult(compilerOutput)
 			unless buildResult.Failed:
 				CopyRequiredReferences()

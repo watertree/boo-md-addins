@@ -33,7 +33,7 @@ class UnityScriptCompiler:
 		try:
 			WriteOptionsToResponseFile(responseFileName)
 			compiler = MapPath("bin/us.exe")
-			compilerOutput = ExecuteProcess(compiler, "@${responseFileName}")
+			compilerOutput = ExecuteProcess(compiler, "\"@${responseFileName}\"")
 			return ParseBuildResult(compilerOutput)
 		ensure:
 			FileService.DeleteFile(responseFileName)
