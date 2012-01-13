@@ -11,3 +11,11 @@ class BooCompilationParameters(ConfigurationParameters):
 	ConfigurationItemProperty Ducky = false
 	ConfigurationItemProperty Culture = ""
 	ConfigurationItemProperty NoStdLib = false
+	
+	override def AddDefineSymbol (symbol as string):
+		# TODO: Implement
+		pass
+		
+	override def RemoveDefineSymbol (symbol as string):
+		# TODO: Implement
+		pass
