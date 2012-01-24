@@ -39,7 +39,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 	static IMPORTS_PATTERN = /^\s*import\s+(?<namespace>[\w\d]+(\.[\w\d]+)*)?\.?\s*/
 	
 	# Only lookup "Go to" once
-	static gotoBase = GettextCatalog.GetString ("Go to")
+	static gotoBase = GettextCatalog.GetString ("Go to Definition ({0})")
 	
 	override def Initialize():
 		super()
@@ -380,7 +380,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		if (location != null):
 			displayText = DisplayTextForLocation (location)
 			if not string.IsNullOrEmpty (displayText):
-				item.Text = string.Format ("{0} {1}", gotoBase, displayText)
+				item.Text = string.Format (gotoBase, displayText)
 		
 	[CommandHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
 	def GotoDeclaration ():
