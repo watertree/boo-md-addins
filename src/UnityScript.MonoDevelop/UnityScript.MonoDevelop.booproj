@@ -99,6 +99,5 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UnityScript.MonoDevelop.addin.xml" />
-    <EmbeddedResource Include="ShaderLabSyntaxMode.xml" />
   </ItemGroup>
 </Project>
