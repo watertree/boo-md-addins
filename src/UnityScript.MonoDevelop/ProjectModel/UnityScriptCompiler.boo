@@ -15,6 +15,7 @@ class UnityScriptCompiler:
 	_projectItems as ProjectItemCollection
 	_compilationParameters as UnityScriptCompilationParameters
 	_projectParameters as UnityScriptProjectParameters
+	_monitor as IProgressMonitor
 	
 	def constructor(
 		config as DotNetProjectConfiguration,
@@ -27,6 +28,7 @@ class UnityScriptCompiler:
 		_projectItems = projectItems
 		_compilationParameters = config.CompilationParameters or UnityScriptCompilationParameters()
 		_projectParameters = config.ProjectParameters or UnityScriptProjectParameters()
+		_monitor = progressMonitor
 		
 	def Run() as BuildResult:
 		responseFileName = Path.GetTempFileName()
@@ -59,6 +61,9 @@ class UnityScriptCompiler:
 		commandLine.WriteLine("-debug+")
 		commandLine.WriteLine("-out:${_config.CompiledOutputName}")
 		
+		for define in _compilationParameters.DefineSymbols:
+			commandLine.WriteLine ("-define:${define}")
+			
 		for r in referencedFiles:
 			commandLine.WriteLine("-reference:'$r'")
 		
@@ -73,6 +78,8 @@ class UnityScriptCompiler:
 					print "Unrecognized build action:", file.BuildAction
 		
 		commandLineString = commandLine.ToString()
+		if (_monitor):
+			_monitor.Log.WriteLine (commandLineString)
 		print commandLineString
 		File.WriteAllText(responseFileName, commandLineString)
 		
