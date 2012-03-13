@@ -106,4 +106,12 @@
 			<CommandItem id = "MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration" insertafter="MonoDevelop.SourceEditor.SourceEditorCommands.MarkerOperations" />
 		</Condition>
 	</Extension>
+	
+	<Extension path = "/MonoDevelop/ProjectModel/Gui/ItemOptionPanels/Build/Compiler">  
+		<Condition id="ActiveLanguage" value="UnityScript">  
+			<Panel id = "UnityScriptCompilationParametersPanel"  
+				_label = "Compiler"  
+				class = "UnityScript.MonoDevelop.ProjectModel.GUI.UnityScriptCompilationParametersPanel"/>  
+		</Condition>
+	</Extension>  
 </Addin>
