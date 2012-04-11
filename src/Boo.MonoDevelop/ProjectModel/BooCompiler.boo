@@ -74,6 +74,8 @@ class BooCompiler:
 		
 		if _compilationParameters.Ducky: options.WriteLine("-ducky") 
 		if _compilationParameters.NoStdLib: options.WriteLine("-nostdlib")
+		for define in _compilationParameters.DefineSymbols:
+			options.WriteLine ("-define:${define}")
 		
 		projectFiles = item as ProjectFile for item in _projectItems if item isa ProjectFile 
 		for file in projectFiles:
@@ -92,6 +94,8 @@ class BooCompiler:
 				options.WriteLine("-reference:${fileName}")
 		
 		optionsString = options.ToString()
+		if (_monitor):
+			_monitor.Log.WriteLine (optionsString)
 		print optionsString
 		File.WriteAllText(responseFileName, optionsString)
 		
