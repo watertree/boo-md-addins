@@ -21,7 +21,7 @@ class BooCompilationParameters(ConfigurationParameters):
 			if (string.IsNullOrEmpty (value)):
 				_defines = System.Collections.Generic.List of string()
 			else:
-				_defines = System.Collections.Generic.List of string(value.Split (array (string, (DefineSeparator,)), StringSplitOptions.RemoveEmptyEntries))
+				_defines = System.Collections.Generic.List of string(value.Split ((DefineSeparator,), StringSplitOptions.RemoveEmptyEntries))
 	private _defines = System.Collections.Generic.List of string()
 	
 	DefineSymbols:
