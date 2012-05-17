@@ -7,7 +7,6 @@ import MonoDevelop.Ide
 import MonoDevelop.Ide.Gui
 import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Components
-import MonoDevelop.Projects.Dom
 
 class CompilationUnitDataProvider(DropDownBoxListWindow.IListDataProvider):
 	private _document as Document

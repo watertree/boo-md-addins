@@ -48,11 +48,6 @@
       <HintPath>..\..\..\monodevelop\main\build\bin\Mono.TextEditor.dll</HintPath>
       <Package>monodevelop</Package>
     </Reference>
-    <Reference Include="ICSharpCode.NRefactory, Version=1.0.4275.27556, Culture=neutral, PublicKeyToken=efe927acf176eea2">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monodevelop\main\build\bin\ICSharpCode.NRefactory.dll</HintPath>
-      <Package>monodevelop</Package>
-    </Reference>
     <Reference Include="Boo.Lang.Parser">
       <HintPath>..\..\..\boo\build\Boo.Lang.Parser.dll</HintPath>
     </Reference>
