@@ -10,7 +10,6 @@
     <RootNamespace>UnityScript.MonoDevelop</RootNamespace>
     <UsePartialTypes>false</UsePartialTypes>
     <AssemblyName>UnityScript.MonoDevelop</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +20,7 @@
     <culture />
     <genwarnings>false</genwarnings>
     <nostdlib>false</nostdlib>
+    <DefineConstants />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -30,6 +30,7 @@
     <culture />
     <genwarnings>false</genwarnings>
     <nostdlib>false</nostdlib>
+    <DefineConstants />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,6 +58,9 @@
     <Reference Include="Mono.Debugging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5e9ce85b0923c84f">
       <Package>monodevelop</Package>
     </Reference>
+    <Reference Include="UnityScript">
+      <HintPath>..\..\..\unityscript\bin\UnityScript.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Completion\UnityScriptEditorCompletion.boo" />
@@ -79,14 +83,6 @@
     <ProjectReference Include="..\Boo.MonoDevelop.Util\Boo.MonoDevelop.Util.booproj">
       <Project>{EE6B8C46-43AB-422B-B6C9-E3E29A33EDC1}</Project>
       <Name>Boo.MonoDevelop.Util</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\unityscript\src\UnityScript\UnityScript.booproj">
-      <Project>{A4F2FB34-6254-473D-9EB4-FAF062AF1AEB}</Project>
-      <Name>UnityScript</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\unityscript\src\UnityScript.Lang\UnityScript.Lang.booproj">
-      <Project>{2784E7F4-5206-4BF9-99CD-96B1D94D0E19}</Project>
-      <Name>UnityScript.Lang</Name>
     </ProjectReference>
     <ProjectReference Include="..\UnityScript.Ide\UnityScript.Ide.booproj">
       <Project>{53D5E189-64E0-49A6-A8F3-505599E84639}</Project>

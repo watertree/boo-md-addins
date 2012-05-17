@@ -3,6 +3,7 @@ namespace Boo.MonoDevelop.Tests
 import NUnit.Framework
 import MonoDevelop.Projects
 import MonoDevelop.Projects.Dom
+import System.Collections.Generic
 
 [TestFixture]
 class BooParserTest(MonoDevelopTestBase):

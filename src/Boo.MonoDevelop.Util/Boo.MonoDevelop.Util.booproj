@@ -10,7 +10,6 @@
     <RootNamespace>Boo.MonoDevelop.Util</RootNamespace>
     <UsePartialTypes>false</UsePartialTypes>
     <AssemblyName>Boo.MonoDevelop.Util</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +21,7 @@
     <genwarnings>false</genwarnings>
     <ConsolePause>false</ConsolePause>
     <nostdlib>false</nostdlib>
+    <DefineConstants />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,47 +32,57 @@
     <genwarnings>false</genwarnings>
     <ConsolePause>false</ConsolePause>
     <nostdlib>false</nostdlib>
+    <DefineConstants />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="Boo.Lang.Parser, Version=2.0.9.5, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\boo\build\Boo.Lang.Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Compiler, Version=2.0.9.5, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\boo\build\Boo.Lang.Compiler.dll</HintPath>
-    </Reference>
     <Reference Include="MonoDevelop.Core, Version=2.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\bin\MonoDevelop.Core.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
     <Reference Include="MonoDevelop.Ide, Version=2.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\bin\MonoDevelop.Ide.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
     <Reference Include="Mono.TextEditor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\bin\Mono.TextEditor.dll</HintPath>
+      <Package>monodevelop</Package>
     </Reference>
     <Reference Include="MonoDevelop.Refactoring, Version=2.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\AddIns\MonoDevelop.Refactoring\MonoDevelop.Refactoring.dll</HintPath>
+      <Package>monodevelop-core-addins</Package>
     </Reference>
     <Reference Include="MonoDevelop.SourceEditor2, Version=2.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\AddIns\MonoDevelop.SourceEditor2.dll</HintPath>
+      <Package>monodevelop-core-addins</Package>
     </Reference>
     <Reference Include="MonoDevelop.DesignerSupport, Version=2.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\AddIns\MonoDevelop.DesignerSupport\MonoDevelop.DesignerSupport.dll</HintPath>
+      <Package>monodevelop-core-addins</Package>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=1.0.4275.27556, Culture=neutral, PublicKeyToken=efe927acf176eea2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\monodevelop\main\build\bin\ICSharpCode.NRefactory.dll</HintPath>
+      <Package>monodevelop</Package>
+    </Reference>
+    <Reference Include="Boo.Lang.Parser">
+      <HintPath>..\..\..\boo\build\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Compiler">
+      <HintPath>..\..\..\boo\build\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
