@@ -7,6 +7,9 @@ import MonoDevelop.Ide
 import MonoDevelop.Ide.Gui
 import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Components
+import MonoDevelop.Projects.Dom
+import MonoDevelop.Projects.Dom.Parser
+import MonoDevelop.Projects.Dom.Serialization
 
 class CompilationUnitDataProvider(DropDownBoxListWindow.IListDataProvider):
 	private _document as Document

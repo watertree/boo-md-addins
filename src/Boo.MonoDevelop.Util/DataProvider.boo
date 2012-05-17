@@ -7,6 +7,10 @@ import MonoDevelop.Ide
 import MonoDevelop.Ide.Gui
 import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Components
+import MonoDevelop.Projects.Dom
+import MonoDevelop.Projects.Dom.Parser
+import MonoDevelop.Projects.Dom.Output
+import MonoDevelop.Projects.Dom.Serialization
 
 class DataProvider(DropDownBoxListWindow.IListDataProvider):
 	public IconCount as int:
