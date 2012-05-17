@@ -59,17 +59,21 @@
       <Private>False</Private>
       <Package>nunit</Package>
     </Reference>
-    <Reference Include="MonoDevelop.Core">
-      <HintPath>..\..\..\..\monodevelop\main\build\bin\MonoDevelop.Core.dll</HintPath>
+    <Reference Include="MonoDevelop.Core, Version=2.6.0.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
     </Reference>
-    <Reference Include="MonoDevelop.Ide">
-      <HintPath>..\..\..\..\monodevelop\main\build\bin\MonoDevelop.Ide.dll</HintPath>
+    <Reference Include="MonoDevelop.DesignerSupport, Version=2.6.0.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monodevelop-core-addins</Package>
     </Reference>
-    <Reference Include="MonoDevelop.SourceEditor2">
-      <HintPath>..\..\..\..\monodevelop\main\build\AddIns\DisplayBindings\SourceEditor\MonoDevelop.SourceEditor2.dll</HintPath>
+    <Reference Include="MonoDevelop.Ide, Version=2.6.0.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
     </Reference>
-    <Reference Include="MonoDevelop.DesignerSupport">
-      <HintPath>..\..\..\..\monodevelop\main\build\AddIns\MonoDevelop.DesignerSupport\MonoDevelop.DesignerSupport.dll</HintPath>
+    <Reference Include="MonoDevelop.SourceEditor2, Version=2.6.0.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monodevelop-core-addins</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -16,15 +16,14 @@ import MonoDevelop.Projects
 import MonoDevelop.Projects.Dom
 import MonoDevelop.Projects.Dom.Output
 import MonoDevelop.Projects.Dom.Parser
-import MonoDevelop.Projects.Dom.Serialization
 import MonoDevelop.Ide
 import MonoDevelop.Ide.Gui
 import MonoDevelop.Ide.Gui.Content
 import MonoDevelop.Ide.CodeCompletion
 import MonoDevelop.Core
-
 import MonoDevelop.Components
 import MonoDevelop.Components.Commands
+
 
 import Boo.Ide
 import Boo.MonoDevelop.Util
