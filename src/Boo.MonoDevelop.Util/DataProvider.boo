@@ -11,21 +11,26 @@ import MonoDevelop.Components
 class DataProvider(DropDownBoxListWindow.IListDataProvider):
 	public IconCount as int:
 		get:
-			return _memberList.Count
+			return 0
+			#return _memberList.Count
 		
 	private _tag as object
-	private _ambience as Ambience
-	private _memberList as List of IMember
+	#private _ambience as Ambience
+	#private _memberList as List of IMember
 	private _document as Document
-		
-	def constructor(document as Document, tag as object, ambience as Ambience):
+
+	def constructor(document as Document, tag as object):				
+	#def constructor(document as Document, tag as object, ambience as Ambience):
+		/*
 		_memberList = List of IMember()
 		_document = document
 		_tag = (tag as INode).Parent
-		_ambience = ambience
+		_ambience = ambience*/
 		Reset()
 		
 	def Reset():
+		pass
+		/*
 		_memberList.Clear()
 		if(_tag isa ICompilationUnit):
 			types = Stack of IType((_tag as ICompilationUnit).Types)
@@ -37,7 +42,9 @@ class DataProvider(DropDownBoxListWindow.IListDataProvider):
 		elif(_tag isa IType):
 			_memberList.AddRange((_tag as IType).Members)
 		_memberList.Sort({x,y|string.Compare(GetString(_ambience,x), GetString(_ambience,y), StringComparison.OrdinalIgnoreCase)})
-		
+		*/
+	
+	/*						
 	def GetString(ambience as Ambience, member as IMember):
 		flags = OutputFlags.IncludeGenerics | OutputFlags.IncludeParameters | OutputFlags.ReformatDelegates
 		if(_tag isa ICompilationUnit):
@@ -61,5 +68,5 @@ class DataProvider(DropDownBoxListWindow.IListDataProvider):
 		extEditor = _document.GetContent of IExtensibleTextEditor()
 		if(extEditor != null):
 			extEditor.SetCaretTo(Math.Max(1, location.Line), location.Column)
-			
-
+	*/
+	

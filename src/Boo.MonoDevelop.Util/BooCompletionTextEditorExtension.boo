@@ -27,7 +27,7 @@ import Boo.MonoDevelop.Util
 
 class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocument):
 	
-	_dom as ProjectDom
+	#_dom as ProjectDom
 	_project as DotNetProject
 	_index as ProjectIndex
 	
@@ -41,6 +41,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 	
 	override def Initialize():
 		super()
+		/*
 		_dom = ProjectDomService.GetProjectDom(Document.Project) or ProjectDomService.GetFileDom(FileName)
 		_project = Document.Project as DotNetProject
 		_index = ProjectIndexFor(_project)
@@ -48,12 +49,13 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		UpdatePath(null, null)
 		textEditorData.Caret.PositionChanged += UpdatePath
 		Document.DocumentParsed += { UpdatePath(null, null) }
+		*/
 		
 	abstract def ShouldEnableCompletionFor(fileName as string) as bool:
 		pass
 		
-	abstract def GetParameterDataProviderFor(methods as Boo.Lang.List of MethodDescriptor) as IParameterDataProvider:
-		pass
+	#abstract def GetParameterDataProviderFor(methods as Boo.Lang.List of MethodDescriptor) as IParameterDataProvider:
+	#	pass
 		
 	abstract SelfReference as string:
 		get
@@ -79,7 +81,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		return ProjectIndexFactory.ForProject(project)
 		
 	override def ExtendsEditor(doc as MonoDevelop.Ide.Gui.Document, editor as IEditableTextBuffer):
-		return ShouldEnableCompletionFor(doc.Name)
+		return false
+		#return ShouldEnableCompletionFor(doc.Name)
 		
 	override def HandleParameterCompletion(context as CodeCompletionContext, completionChar as char):
 		if completionChar != char('('):
@@ -134,6 +137,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		return GetToken (DocumentLocation (context.TriggerLine, context.TriggerLineOffset))
 		
 	def AddGloballyVisibleAndImportedSymbolsTo(result as BooCompletionDataList):
+		pass
+		/*
 		ThreadPool.QueueUserWorkItem() do:
 			namespaces = Boo.Lang.List of string() { string.Empty }
 			for ns in _index.ImportsFor(FileName, Text):
@@ -150,9 +155,12 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 				result.IsChanging = false
 			DispatchService.GuiDispatch(callback)
 		return result
-		
+		*/
+	/*
 	virtual def CompleteNamespacesForPattern(context as CodeCompletionContext, pattern as Regex, \
 		                                     capture as string, filterMatches as MonoDevelop.Projects.Dom.MemberType*):
+		return BooCompletionDataList()
+		
 		lineText = GetLineText(context.TriggerLine)
 		matches = pattern.Match(lineText)
 		
@@ -173,6 +181,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 			seen.Add(member.Name, member)
 			result.Add(CompletionData(member.Name, member.StockIcon))
 		return result
+		*/
 		
 	def CompleteMembers(context as CodeCompletionContext):
 		text = string.Format ("{0}{1} {2}", GetText (0, context.TriggerOffset),
@@ -257,12 +266,14 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		get: return TextEditor.Text
 		
 	protected TextEditor:
-		get: return Document.Editor
+		get: null return Document.Editor
 		
 	protected FileName:
 		get: return Document.FileName
 		
 	def CreatePathWidget(index as int) as Gtk.Widget:
+		return null
+		/*
 		path = CurrentPath
 		if(path == null or index < 0 or index >= path.Length):
 			return null
@@ -277,12 +288,15 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		window = DropDownBoxListWindow(provider)
 		window.SelectItem(tag)
 		return window
+		*/
 		
 	protected virtual def OnPathChanged(args as DocumentPathChangedEventArgs):
 		if(PathChanged != null):
 			PathChanged(self, args)
 			
 	def UpdatePath(sender as object, args as Mono.TextEditor.DocumentLocationEventArgs):
+		pass
+		/*(
 		unit = Document.CompilationUnit
 		if(unit == null):
 			return
@@ -322,10 +336,10 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		noSelection as PathEntry = null
 		if(type == null):
 			noSelection = PathEntry(GettextCatalog.GetString("No selection"))
-			noSelection.Tag = CustomNode(Document.CompilationUnit)
+			#noSelection.Tag = CustomNode(Document.CompilationUnit)
 		elif(member == null and type.ClassType != ClassType.Delegate):
 			noSelection = PathEntry(GettextCatalog.GetString("No selection"))
-			noSelection.Tag = CustomNode(type)
+			#noSelection.Tag = CustomNode(type)
 			
 		if(noSelection != null):
 			result.Add(noSelection)
@@ -333,6 +347,7 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		prev = CurrentPath
 		CurrentPath = result.ToArray()
 		OnPathChanged(DocumentPathChangedEventArgs(prev))
+		*/
 		
 	# Generate display text for a given token location,
 	# so we can display "Go to DisplayTextForLocation" 
@@ -382,6 +397,8 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		
 	[CommandHandler(MonoDevelop.Refactoring.RefactoryCommands.GotoDeclaration)]
 	def GotoDeclaration ():
+		pass
+		/*
 		location = null as TokenLocation
 		try:
 			location = GetLocation ()
@@ -409,7 +426,9 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 		else:
 			# Console.WriteLine ("Jumping to {0}", location.Name)
 			IdeApp.Workbench.OpenDocument (location.File, location.Line, location.Column, OpenDocumentOptions.HighlightCaretLine)
-			
+		*/
+	
+	/*		
 	static def MembersAreEqual(memberInfo as MemberInfo, imember as MonoDevelop.Projects.Dom.IMember):
 		# Console.WriteLine ("Checking {0}", imember.FullName)
 		if not (memberInfo.Name.Equals (imember.Name, StringComparison.Ordinal) or \
@@ -446,11 +465,11 @@ class BooCompletionTextEditorExtension(CompletionTextEditorExtension,IPathedDocu
 				# Console.WriteLine ("Parameter mismatch")
 				return false
 		return true
-		
+	*/	
 
-class CustomNode(AbstractNode):
-	def constructor(parent as INode):
-		Parent = parent
+#class CustomNode(AbstractNode):
+#	def constructor(parent as INode):
+#		Parent = parent
 
 def IconForEntity(member as IEntity) as MonoDevelop.Core.IconId:
 	match member.EntityType:

@@ -25,7 +25,8 @@ class CompilationUnitDataProvider(DropDownBoxListWindow.IListDataProvider):
 		_document = document
 		
 	def GetText(position as int) as string:
-		return (WorkaroundElementAt(_document.ParsedDocument.UserRegions, position) as FoldingRegion).Name
+		return ""
+		#return (WorkaroundElementAt(_document.ParsedDocument.UserRegions, position) as FoldingRegion).Name
 		
 	def GetMarkup(position as int) as string:
 		return GetText (position)
@@ -37,10 +38,13 @@ class CompilationUnitDataProvider(DropDownBoxListWindow.IListDataProvider):
 		return WorkaroundElementAt(_document.ParsedDocument.UserRegions, (position))
 		
 	def ActivateItem(position as int):
+		pass
+		/*
 		region = WorkaroundElementAt(_document.ParsedDocument.UserRegions, position) as FoldingRegion
 		editor = _document.GetContent of IExtensibleTextEditor()
 		if(editor != null):
 			editor.SetCaretTo(Math.Max(1, region.Region.Start.Line), region.Region.Start.Column)
+		*/
 			
 	def Reset():
 		pass
